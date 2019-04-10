@@ -1,0 +1,133 @@
+<template>
+    <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="80">
+        <FormItem label="用户名" prop="name">
+            <Input v-model="formValidate.name" placeholder="输入您的用户名"></Input>
+        </FormItem>
+        <FormItem label="E-mail" prop="mail">
+            <Input v-model="formValidate.mail" placeholder="输入您的电子邮件地址"></Input>
+        </FormItem>
+        <FormItem label="密码" prop="password">
+            <Input v-model="formValidate.passwd" placeholder="输入密码" type="password"></Input>
+        </FormItem>
+        <FormItem label="确认密码" prop="passwdCheck">
+            <Input v-model="formValidate.passwdCheck" placeholder="再次输入密码" type="password"></Input>
+        </FormItem>
+        <!--<FormItem label="City" prop="city">-->
+        <!--<Select v-model="formValidate.city" placeholder="Select your city">-->
+        <!--<Option value="beijing">New York</Option>-->
+        <!--<Option value="shanghai">London</Option>-->
+        <!--<Option value="shenzhen">Sydney</Option>-->
+        <!--</Select>-->
+        <!--</FormItem>-->
+        <FormItem label="生日">
+            <Row>
+                <Col span="11">
+                    <FormItem prop="date">
+                        <DatePicker type="date" placeholder="Select date" v-model="formValidate.date"></DatePicker>
+                    </FormItem>
+                </Col>
+                <Col span="2" style="text-align: center"></Col>
+                <Col span="11">
+                    <!--<FormItem prop="time">-->
+                    <!--<TimePicker type="time" placeholder="Select time" v-model="formValidate.time"></TimePicker>-->
+                    <!--</FormItem>-->
+                </Col>
+            </Row>
+        </FormItem>
+        <FormItem label="性别" prop="gender">
+            <RadioGroup v-model="formValidate.gender">
+                <Radio label="male">男</Radio>
+                <Radio label="female">女</Radio>
+            </RadioGroup>
+        </FormItem>
+        <FormItem label="兴趣" prop="interest">
+            <CheckboxGroup v-model="formValidate.interest">
+                <Checkbox label="文学著作"></Checkbox>
+                <Checkbox label="科学技术"></Checkbox>
+                <Checkbox label="教材教辅"></Checkbox>
+                <Checkbox label="报纸期刊"></Checkbox>
+            </CheckboxGroup>
+        </FormItem>
+        <FormItem>
+            <Button type="primary" @click="handleSubmit('formValidate')">Submit</Button>
+            <Button @click="handleReset('formValidate')" style="margin-left: 8px">Reset</Button>
+        </FormItem>
+    </Form>
+</template>
+<script>
+    export default {
+        data() {
+            const validatePass = (rule, value, callback) => {
+                if (!(value.length > 6)) {
+                    callback(new Error('请输入您的密码'));
+                } else {
+                    // if (this.formValidate.passwdCheck !== '') {
+                    //     // 对第二个密码框单独验证
+                    //     this.$refs.formValidate.validateField('passwdCheck');
+                    // }
+                    callback();
+                }
+            };
+            const validatePassCheck = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请再次输入您的密码'));
+                } else if (value !== this.formValidate.passwd) {
+                    callback(new Error('两次输入密码不一致'));
+                } else {
+                    callback();
+                }
+            };
+            return {
+                formValidate: {
+                    name: '',
+                    mail: '',
+                    passwd: '',
+                    passwdCheck: '',
+                    gender: '',
+                    interest: [],
+                    date: '',
+                },
+                ruleValidate: {
+                    name: [
+                        {required: true, message: '用户名不能为空', trigger: 'blur'}
+                    ],
+                    mail: [
+                        {required: true, message: '邮箱不能为空', trigger: 'blur'},
+                        {type: 'email', message: '错误的邮箱地址格式', trigger: 'blur'}
+                    ],
+                    passwd: [
+                        {required: true, message: '密码不能为空', trigger: 'blur'},
+                        {validator: validatePass, trigger: 'blur'}
+                    ],
+                    passwdCheck: [
+                        {validator: validatePassCheck, trigger: 'blur'}
+                    ],
+                    interest: [
+                        {required: true, type: 'array', min: 1, message: '最少选择一个', trigger: 'change'},
+                        {type: 'array', max: 2, message: '最多选择两个', trigger: 'change'}
+                    ],
+                }
+            }
+        },
+        methods: {
+            handleSubmit(name) {
+                this.$refs[name].validate((valid) => {
+                    if (valid) {
+                        this.$Message.success('注册请求已发送!');
+                    } else {
+                        this.$Message.error('信息存在错误!');
+                    }
+                })
+            },
+            handleReset(name) {
+                this.$refs[name].resetFields();
+            }
+        },
+        mounted() {
+            this.$Message.info({
+                content: "没有写后端所以并不会发送数据给后端，也不会记录用户名等信息，本条信息会在10秒后消失",
+                duration: 10
+            });
+        }
+    }
+</script>

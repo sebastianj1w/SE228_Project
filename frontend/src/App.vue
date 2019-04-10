@@ -1,13 +1,20 @@
 <template>
-  <div id="app">
-    <router-view/>
-  </div>
+    <layout></layout>
 </template>
 
 <script>
-export default {
-  name: 'App'
-}
+    import layout from './components/Layout.vue'
+    export default {
+        name: 'app',
+        components: {
+            layout,
+        },
+        data() {
+            return {
+                // cart: [],
+            }
+        }
+    }
 </script>
 
 <style>

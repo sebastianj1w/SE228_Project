@@ -1,22 +1,13 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import App from './App'
-import router from './router'
+import App from './App.vue'
+import './plugins/iview.js'
 
-// 引入 BootstrapVue
-import BootstrapVue from 'bootstrap-vue'
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+Vue.config.productionTip = false;
 
-Vue.use(BootstrapVue)
 
-Vue.config.productionTip = false
-
-/* eslint-disable no-new */
+import router from "./router.js"    // import router 的router 一定要小写， 不要写成Router, 否则报 can't match的报错
 new Vue({
-  el: '#app',
-  router,
-  components: { App },
-  template: '<App/>'
-})
+    el: '#app',
+    router,  // 注入到根实例中
+    render: h => h(App)
+}).$mount('#app');
