@@ -1,21 +1,23 @@
-package ebookBackend.RESTfulService.controller;
+package ebookBackend.RESTfulService.entity;
 
-public class Book {
+public class BookBasic {
     private String title;
     private String author;
     private String publisher;
     private String ID;
-    private String publishDate;
-    private String abstraction;
-    private String catalogue;
     private float price;
-    private float rate;
-    private float words;
     private int stock;
     private long ISBN;
 
 
-    public Book() {
+    public BookBasic(Book b) {
+        this.title = b.getTitle();
+        this.author = b.getAuthor();
+        this.publisher = b.getPublisher();
+        this.ID = b.getID();
+        this.price = b.getPrice();
+        this.ISBN = b.getISBN();
+        this.stock = b.getStock();
     }
 
 
@@ -35,28 +37,8 @@ public class Book {
         this.ID = ID;
     }
 
-    public void setPublishDate(String PD) {
-        publishDate = PD;
-    }
-
-    public void setAbstraction(String ab) {
-        abstraction = ab;
-    }
-
-    public void setCatalogue(String catalogue) {
-        this.catalogue = catalogue;
-    }
-
     public void setPrice(float price) {
         this.price = price;
-    }
-
-    public void setRate(float rate) {
-        this.rate = rate;
-    }
-
-    public void setWords(float words) {
-        this.words = words;
     }
 
     public void setStock(int stock) {
@@ -84,28 +66,8 @@ public class Book {
         return ID;
     }
 
-    public String getPublishDate() {
-        return publishDate;
-    }
-
-    public String getAbstraction() {
-        return abstraction;
-    }
-
-    public String getCatalogue() {
-        return catalogue;
-    }
-
     public float getPrice() {
         return price;
-    }
-
-    public float getRate() {
-        return rate;
-    }
-
-    public float getWords() {
-        return words;
     }
 
     public int getStock() {

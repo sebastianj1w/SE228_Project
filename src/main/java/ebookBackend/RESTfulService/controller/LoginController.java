@@ -1,5 +1,6 @@
 package ebookBackend.RESTfulService.controller;
 
+import ebookBackend.RESTfulService.entity.User;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
@@ -13,7 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -23,14 +23,13 @@ public class LoginController {
 
     @RequestMapping(path = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public String login(@RequestParam String username,
-                        @RequestParam String password) {
-        if (password.equals(keyMap.get(username))) {
-
-            return "successful";
-        } else {
+    public String login(@RequestBody User user) {
+        System.out.println(user);
+//        if (password.equals(keyMap.get(username))) {
+//            return "successful";
+//        } else {
             return "failed";
-        }
+//        }
     }
 
     @RequestMapping(path = "/information", method = RequestMethod.GET)
@@ -65,51 +64,10 @@ public class LoginController {
         HashMap<String, String> keyMap = new HashMap<>();
         int size = list.size();
         for (int i=0;i<size;i++) {
-            keyMap.put(list.get(i).getID(), list.get(i).getPassword());
+            keyMap.put(list.get(i).getId(), list.get(i).getPassword());
         }
         return keyMap;
     }
 
 
-}
-
-class User {
-    private String ID;
-    private String password;
-    private String identity;
-    private boolean ban;
-    private String mail;
-
-    public User() {
-        this.mail = "123@gmail.com";
-        this.ID = "123";
-    }
-
-    public String getID() {
-        return ID;
-    }
-
-    public void setID(String ID) {
-        this.ID = ID;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String email) {
-        this.mail = email;
-    }
-
-    public String getPassword() { return password; }
-
-    public void setPassword(String password) { this.password = password; }
-
-    public String getIdentity() { return identity; }
-
-    public void setIdentity(String identity) { this.identity = identity; }
-
-    public boolean getBan() { return ban; }
-
-    public void setBan(boolean ban) { this.ban = ban; }
 }

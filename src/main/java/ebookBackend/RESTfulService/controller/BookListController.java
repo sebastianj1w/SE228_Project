@@ -1,5 +1,7 @@
 package ebookBackend.RESTfulService.controller;
 
+import ebookBackend.RESTfulService.entity.Book;
+import ebookBackend.RESTfulService.entity.BookBasic;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
@@ -24,6 +26,7 @@ public class BookListController {
     @RequestMapping(path = "/all", method = RequestMethod.GET)
     @ResponseBody
     public List<BookBasic> getList() {
+
         return basicList;
     }
 
