@@ -1,14 +1,14 @@
 <template>
     <div style="min-height: 500px;">
         <Input size="large" v-model="searchConName1" placeholder="输入以开始搜索...">
-        <Select v-model="key" slot="prepend" style="width: 80px">
-            <Option value="title">书名</Option>
-            <Option value="author">作者</Option>
-            <Option value="publisher">出版社</Option>
-            <!--<Option value="ISBN">ISBN</Option>-->
-            <Option value="poly">聚合</Option>
-        </Select>
-        <Button slot="append" icon="ios-search" @click.prevent="handleSearch"></Button>
+            <Select v-model="key" slot="prepend" style="width: 80px">
+                <Option value="title">书名</Option>
+                <Option value="author">作者</Option>
+                <Option value="publisher">出版社</Option>
+                <!--<Option value="ISBN">ISBN</Option>-->
+                <Option value="poly">聚合</Option>
+            </Select>
+            <Button slot="append" icon="ios-search" @click.prevent="handleSearch"></Button>
         </Input>
         <Table ref="table" :height="tableHeight" :columns="columns1" :data="bookListShow"></Table>
         <router-link to="/home">
@@ -21,6 +21,7 @@
 <script>
     // import Abstract from './BookDetail.vue'
     import axios from 'axios'
+
     export default {
         name: "Books",
         components: {
@@ -33,30 +34,35 @@
                 tableHeight: 450,
                 columns1: [
                     {
+                        title: '封面',
+                        render: (h, params) => {
+                            let url = '/books/' + params.row.id;
+                            let src = require("../assets/" + params.row.id + "_ii_cover.jpg");
+                            // console.log(src);
+                            return h('img', {
+                                    attrs: {
+                                        src: src,
+                                        height: 100,
+                                        width: 70,
+                                        style: "margin-top: 3px;"
+                                    }
+                                }
+                            )
+                        },
+                        width: 93,
+                    },
+                    {
                         title: '标题',
                         key: 'title',
                         render: (h, params) => {
                             let url = '/books/' + params.row.id;
                             let src = require("../assets/" + params.row.id + "_ii_cover.jpg");
                             // console.log(src);
-                            return h('Poptip', {
-                                    attrs: {
-                                        trigger: "hover",
-                                        content: "content"
-                                    }
-                                },
-                                [h('router-link', {
-                                    attrs: {
-                                        to: url,
-                                    }
-                                }, params.row.title),h('img', {
-                                    attrs: {
-                                        src: src,
-                                        height: 200,
-                                    },
-                                    slot: "content",
-                                })]
-                            )
+                            return h('router-link', {
+                                attrs: {
+                                    to: url,
+                                }
+                            }, params.row.title)
                         }
                     },
                     {
@@ -140,8 +146,6 @@
                     this.bookListShow = this.search(this.bookList, {author: this.searchConName1});
                 else if (this.key === "publisher")
                     this.bookListShow = this.search(this.bookList, {publisher: this.searchConName1});
-                // else if (this.key === "ISBN")
-                //     this.bookListShow = this.search(this.bookList, {ISBN: this.searchConName1});
                 else if (this.key === "poly") {
                     this.bookListShow = this.search(this.bookList, {title: this.searchConName1});
 
@@ -154,20 +158,16 @@
                         this.bookListShow = this.bookListShow.concat(temp);
 
                     temp = []; //一个新的临时数组
-                    for(let i = 0; i < this.bookListShow.length; i++){
-                        if(temp.indexOf(this.bookListShow[i]) === -1){
+                    for (let i = 0; i < this.bookListShow.length; i++) {
+                        if (temp.indexOf(this.bookListShow[i]) === -1) {
                             temp.push(this.bookListShow[i]);
                         }
                     }
 
                     this.bookListShow = temp;
-                    // temp = this.search(this.bookList, {ISBN: this.searchConName1});
-                    // if (temp != null)
-                    //     this.bookListShow.push.apply(temp);
                 }
             },
             addToCart(ID) {
-                // console.log(111);
                 let amount = JSON.parse(sessionStorage.getItem(ID));
                 if (amount !== null) {
                     amount = parseInt(amount) + 1;
@@ -178,13 +178,11 @@
             }
         },
         mounted() {
-            // this.bookList = JSON.parse(sessionStorage.getItem("bookList"));
             axios.get('http://localhost:8088/getBook/all')
                 .then((response) => {
                     this.bookList = response.data;
                     this.bookListShow = this.bookList;
-                    // this.email = response.data['email'];
-                    // console.log(this.bookList);
+
                 }).catch((error) => {
                 console.log(error);
             });

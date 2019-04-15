@@ -1,4 +1,4 @@
-# e-book
+# e-bookDetail
 
 ## Project setup
 ```
