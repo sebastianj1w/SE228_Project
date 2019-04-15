@@ -1,6 +1,6 @@
 package ebookBackend.controller;
 
-import ebookBackend.dao.TUserInfoMapper;
+import ebookBackend.dao.UserMapper;
 import ebookBackend.entity.User;
 import ebookBackend.service.UserService;
 import net.sf.json.JSONArray;

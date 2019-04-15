@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>maxwell</groupId>
-    <artifactId>springboot-vue-last</artifactId>
+    <artifactId>E-Book-system</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 

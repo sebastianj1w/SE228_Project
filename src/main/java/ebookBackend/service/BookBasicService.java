@@ -1,6 +1,6 @@
 package ebookBackend.service;
 
-import ebookBackend.dao.TBookBasicMapper;
+import ebookBackend.dao.BookBasicMapper;
 import ebookBackend.entity.BookBasic;
 import ebookBackend.entity.BookBasicExample;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.util.List;
 public class BookBasicService {
 
     @Autowired
-    TBookBasicMapper bookBasicMapper;
+    BookBasicMapper bookBasicMapper;
 
     public BookBasic get(String id) {
         BookBasicExample bookBasicExample = new BookBasicExample();

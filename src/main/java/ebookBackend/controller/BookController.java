@@ -30,7 +30,7 @@ public class BookController {
     @RequestMapping(path = "/information", method = RequestMethod.GET)
     @ResponseBody
     public Book information(@RequestParam String ID) {
-        Book book = new Book(bookBasicService.get(ID),bookDetailService.get(ID));
-        return book;
+//        Book book = new Book(bookBasicService.get(ID),bookDetailService.get(ID));
+        return new Book(bookBasicService.get(ID),bookDetailService.get(ID));
     }
 }

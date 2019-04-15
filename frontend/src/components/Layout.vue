@@ -90,38 +90,6 @@
                 loginDrawer: false,
                 cart: [],
                 logUser: "",
-                userList: [
-                    {
-                        ID: "Sebastianj1w",
-                        identity: "Admin",
-                        mail: "sebastianj1w@outlook.com",
-                        ban: false
-                    },
-                    {
-                        ID: "Zydiii",
-                        identity: "Admin",
-                        mail: "Zydiii@sjtu.edu.cn",
-                        ban: false
-                    },
-                    {
-                        ID: "Auser",
-                        identity: "User",
-                        mail: "Auser@163.com",
-                        ban: false
-                    },
-                    {
-                        ID: "RESuB",
-                        identity: "User",
-                        mail: "RESuB12@hotmail.com",
-                        ban: false
-                    },
-                    {
-                        ID: "Bobnation",
-                        identity: "User",
-                        mail: "nnnbOb@yahoo.com",
-                        ban: false
-                    }
-                ],
                 orderList: [
                     {
                         order_no: "A3772",
@@ -145,18 +113,6 @@
                     this.$refs.Login.success = false;
                 }
             },
-            // cancel() {
-            //     this.$refs.Login.success = false;
-            // },
-            // Logined() {
-            //     this.login = true;
-            //     sessionStorage.setItem("login","true");
-            // },
-            // addCart(msg) {
-            //     // this.cart.push(msg);
-            //     // console.log(this.cart.push(msg));
-            //     // console.log(this.cart);
-            // }
         },
         mounted: function () {
             axios.get('http://localhost:8088/getBook/all')
@@ -168,13 +124,15 @@
                 console.log(error);
             });
             sessionStorage.setItem("login","false");
-            sessionStorage.setItem("userList", JSON.stringify(this.userList));
-            sessionStorage.setItem("orderList", JSON.stringify(this.orderList));
+            // sessionStorage.setItem("userList", JSON.stringify(this.userList));
+            // sessionStorage.setItem("orderList", JSON.stringify(this.orderList));
             // console.log(this.cart);
         },
         updated: function () {
             if((this.login = JSON.parse(sessionStorage.getItem("login"))))
                 this.logUser = sessionStorage.getItem("logUser");
+            // console.log(this.login);
+            // console.log(this.logUser);
         }
     }
 </script>

@@ -14,6 +14,7 @@ import UserHello from "./components/UserHello.vue";
 import Statistics from "./components/Statistics.vue";
 import OrderManager from "./components/OrderManage.vue";
 import UserOrder from "./components/UserOrder.vue";
+import MakeOrder from "./components/MakeOrder.vue";
 
 // 要告诉 vue 使用 vueRouter
 Vue.use(VueRouter);
@@ -108,6 +109,10 @@ const routes = [
     {
         path: "/cart",
         component: Cart
+    },
+    {
+        path: "/doOrder",
+        component: MakeOrder
     },
     {
         path: '/',

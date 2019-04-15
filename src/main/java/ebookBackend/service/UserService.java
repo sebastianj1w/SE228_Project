@@ -1,6 +1,6 @@
 package ebookBackend.service;
 
-import ebookBackend.dao.TUserInfoMapper;
+import ebookBackend.dao.UserMapper;
 import ebookBackend.entity.User;
 import ebookBackend.entity.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.util.List;
 public class UserService {
 
     @Autowired
-    TUserInfoMapper userInfoMapper;
+    UserMapper userMapper;
 
 //    public List<User> listAllUser() {
 //        return userInfoMapper.listAllUser();
@@ -23,7 +23,7 @@ public class UserService {
         UserExample userExample = new UserExample();
         UserExample.Criteria criteria = userExample.createCriteria();
         criteria.andIdEqualTo(id);
-        List<User> bdl = userInfoMapper.selectByExample(userExample);
+        List<User> bdl = userMapper.selectByExample(userExample);
         if (bdl.size()>0)
             return bdl.get(0);
         return new User();

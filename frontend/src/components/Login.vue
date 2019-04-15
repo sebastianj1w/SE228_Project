@@ -12,7 +12,7 @@
                 </Input>
             </FormItem>
             <FormItem>
-                <Button type="primary" @click="handleLogin()">Sign_in</Button>
+                <Button type="primary" @click="handleLogin()">登录</Button>
             </FormItem>
         </Form>
         <p v-if="success">登录成功，点击确定</p>
@@ -48,47 +48,30 @@
             }
         },
         methods: {
-            // handleSubmit(name) {
-            //     this.$refs[name].validate((valid) => {
-            //         if (valid) {
-            //             // this.$Message.success('Success!');
-            //             this.userList = JSON.parse(sessionStorage.getItem("userList"));
-            //             for (let i in this.userList) {
-            //                 if (this.userList[i].ID === this.formInline.user) {
-            //                     if (this.userList[i].ban)
-            //                     {
-            //                         this.$Message.error('账号已被禁用！');
-            //                         break;
-            //                     }
-            //                     this.success = true;
-            //                     sessionStorage.setItem("logUser", this.userList[i].ID);
-            //                     sessionStorage.setItem("login", "true");
-            //                     break;
-            //                 }
-            //             }
-            //             if (this.success === false) this.$Message.error('登陆失败！');
-            //         } else {
-            //             this.$Message.error('登陆失败！');
-            //         }
-            //     })
-            // },
             handleLogin() {
-                axios.post('http://localhost:8088/api/login',qs.stringify({
+                axios.post('http://localhost:8088/api/login',{
                     "id": this.formInline.user,
                     "password": this.formInline.password
-                })).then((response) => {
+                }).then((response) => {
                     let status = response.data;
-                    console.log(status);
+                    // console.log(status);
                     if(status === 'successful') {
-                        this.$router.push('/information');
+                        // this.$router.push('/information');
+                        this.success = true;
                     } else {
-                        alert(response.data);
+                        // alert(response.data);
                     }
-                    console.log(response);
+                    // console.log(response);
                 }).catch((error) => {
                     console.log(error);
                 });
             }
+        },
+        updated: function () {
+            if (!this.success) return;
+            console.log("1");
+            sessionStorage.setItem("logUser", this.formInline.user);
+            sessionStorage.setItem("login", "true");
         }
     }
 </script>
