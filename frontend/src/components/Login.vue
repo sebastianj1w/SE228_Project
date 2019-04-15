@@ -74,10 +74,11 @@
             // },
             handleLogin() {
                 axios.post('http://localhost:8088/api/login',qs.stringify({
-                    'username': this.formInline.user,
-                    'password': this.formInline.password
+                    "id": this.formInline.user,
+                    "password": this.formInline.password
                 })).then((response) => {
                     let status = response.data;
+                    console.log(status);
                     if(status === 'successful') {
                         this.$router.push('/information');
                     } else {
@@ -85,7 +86,7 @@
                     }
                     console.log(response);
                 }).catch((error) => {
-                    // console.log(response);
+                    console.log(error);
                 });
             }
         }

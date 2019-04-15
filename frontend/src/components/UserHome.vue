@@ -4,7 +4,7 @@
             <Col span="5">
                 <Menu theme="light" :active-name="a_page" style="z-index: 0;width: 100%;">
                     <MenuGroup title="系统管理" v-if="adminMode">
-                        <router-link :to="'/user/'+userID+'/book-manage'">
+                        <router-link :to="'/user/'+userID+'/bookDetail-manage'">
                             <MenuItem name="11">
                                 <Icon type="md-document"/>
                                 库存管理
