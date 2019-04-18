@@ -14,18 +14,18 @@ create table bookBasic
 go
 
 create unique index t_booklist_ID_uindex
-	on bookBasic (ID)
+	on books (ID)
 go
 
 create unique index t_booklist_ISBN_uindex
-	on bookBasic (ISBN)
+	on books (ISBN)
 go
 
 create table bookDetail
 (
 	ID varchar(15) not null
 		constraint t_bookdetail_t_booklist_ID_fk
-			references bookBasic (ID),
+			references books (ID),
 	rate float,
 	publishDate varchar(11),
 	words float,

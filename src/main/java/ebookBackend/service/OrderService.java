@@ -1,11 +1,9 @@
 package ebookBackend.service;
 
+import ebookBackend.dao.BooksMapper;
 import ebookBackend.dao.ItemsMapper;
 import ebookBackend.dao.OrderMapper;
-import ebookBackend.entity.Items;
-import ebookBackend.entity.ItemsExample;
-import ebookBackend.entity.Order;
-import ebookBackend.entity.OrderExample;
+import ebookBackend.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +15,12 @@ public class OrderService {
 
     @Autowired
     OrderMapper orderMapper;
+    @Autowired
+    ItemsMapper itemsMapper;
+    @Autowired
+    BooksMapper bookBasicMapper;
 
-    public Order getByOrderId(int orderId) {
+    public Order getByOrderId(String orderId) {
         OrderExample orderExample = new OrderExample();
         OrderExample.Criteria criteria = orderExample.createCriteria();
         criteria.andOrderidEqualTo(orderId);
@@ -28,12 +30,34 @@ public class OrderService {
         return new Order();
     }
 
-    public Order makeOrder(String userId) {
+    public Order makeOrder(OrderWithItems orderWithItems) {
+        orderWithItems.generateItemList();
+
         Order order = new Order();
-        order.setUserid(userId);
-//        order.setOrderid("111");
-        order.setTotal(new BigDecimal("90.00"));
+        order.setUserid(orderWithItems.getUserid());
+        order.setOrderid(orderWithItems.getOrderid());
+
+        List<Items> items = orderWithItems.getItems();
+        for (Items item: items){
+            BooksExample bookBasicExample = new BooksExample();
+            BooksExample.Criteria criteria = bookBasicExample.createCriteria();
+            criteria.andIdEqualTo(item.getBookid());
+
+            item.setValue(bookBasicMapper.selectByExample(bookBasicExample).get(0).getPrice());
+        }
+
+        BigDecimal total = new BigDecimal("0");
+        for (Items item: items){
+            total = total.add(item.getValue().multiply(new BigDecimal(item.getAmount())));
+        }
+
+        order.setTotal(total);
         orderMapper.insert(order);
+
+        for (Items item: items){
+            itemsMapper.insert(item);
+        }
+
         return order;
     }
 
@@ -43,11 +67,11 @@ public class OrderService {
         criteria.andUseridEqualTo(userId);
         return orderMapper.selectByExample(orderExample);
     }
+//
+//    @Autowired
+//    ItemsMapper itemsMapper;
 
-    @Autowired
-    ItemsMapper itemsMapper;
-
-    public List<Items> getItems(int orderId) {
+    public List<Items> getItems(String orderId) {
         ItemsExample itemsExample = new ItemsExample();
         ItemsExample.Criteria criteria = itemsExample.createCriteria();
         criteria.andOrderidEqualTo(orderId);
