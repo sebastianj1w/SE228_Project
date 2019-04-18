@@ -28,17 +28,27 @@ public class UserService {
             return bdl.get(0);
         return new User();
     }
-//
-//    public int insertUser(User user) {
-//        return userDao.insertUser(user);
-//    }
-//
+
+    public int banUser(String id, int op) {
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        criteria.andIdEqualTo(id);
+        User user = new User();
+        user.setBan(op == 1);
+        userMapper.updateByExampleSelective(user, userExample);
+        return 0;
+    }
+
+    public int insertUser(User user) {
+        return userMapper.insert(user);
+    }
+
 //    public int updateUser(User user) {
-//        return userDao.updateUser(user);
+//        return userMapper.updateUser(user);
 //    }
-//
+
 //    public int deleteUser(int id) {
-//        return userDao.deleteUser(id);
+////        return userMapper.deleteUser(id);
 //    }
 
 }

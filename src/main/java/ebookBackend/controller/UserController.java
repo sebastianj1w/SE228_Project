@@ -5,9 +5,7 @@ import ebookBackend.entity.User;
 import ebookBackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,19 +13,18 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
+    @Autowired
+    UserService userService;
 
     @ResponseBody
     @RequestMapping("/detail")
-    public User detail(String  id) {
+    public User detail(@RequestParam String id) {
         User user = new User();
         user.setId(id);
         user.setIden("user");
         user.setMail("china");
         return user;
     }
-
-    @Autowired
-    UserService userService;
 
     @ResponseBody
     @RequestMapping("/list")
@@ -38,19 +35,18 @@ public class UserController {
         return null;
     }
 
-    @RequestMapping(value = "/insert", method = RequestMethod.POST)
-    public String insertUser(String identity, String mail) {
-//        User user = new User();
-//        user.setIdentity(identity);
-//        user.setMail(mail);
+    @ResponseBody
+    @RequestMapping(value = "/sign_up", method = RequestMethod.POST)
+    public int insertUser(@RequestBody User user) {
+        user.setIden("user");
+        return userService.insertUser(user);
+    }
 
-//        int result = userService.insertUser(user);
-//        if (result > 0) {
-//            return "{\"returncode\":0,\"message\":\"success\"}";
-//        } else {
-//            return "{\"returncode\":0,\"message\":\"error\"}";
-//        }
-        return "";
+    @ResponseBody
+    @RequestMapping(value = "/ban", method = RequestMethod.GET)
+    public String banUser(@RequestParam String id, @RequestParam int op) {
+        userService.banUser(id, op);
+        return "success";
     }
 
 
