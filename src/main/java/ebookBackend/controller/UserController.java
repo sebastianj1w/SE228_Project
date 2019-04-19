@@ -19,20 +19,25 @@ public class UserController {
     @ResponseBody
     @RequestMapping("/detail")
     public User detail(@RequestParam String id) {
-        User user = new User();
-        user.setId(id);
-        user.setIden("user");
-        user.setMail("china");
+        User user = userService.get(id);
+        user.setPassword(null);
         return user;
+    }
+
+    @ResponseBody
+    @RequestMapping("/conflict")
+    public String conflict(@RequestParam String id) {
+        User user = userService.get(id);
+        if (user.getId()!=null)
+            if (user.getId().equals(id))
+                return "conflict";
+        return "no-conflict";
     }
 
     @ResponseBody
     @RequestMapping("/list")
     public List<User> list() {
-//        List<User> list = userService.listAllUser();
-//        System.out.println("size:" + list.size());
-//        return list;
-        return null;
+        return userService.getall();
     }
 
     @ResponseBody

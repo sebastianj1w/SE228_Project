@@ -3,19 +3,20 @@
         <Form v-if="!success" ref="formInline" :model="formInline" :rules="ruleInline" inline>
             <FormItem prop="user">
                 <Input type="text" v-model="formInline.user" placeholder="Username">
-                <Icon type="ios-person-outline" slot="prepend"></Icon>
+                    <Icon type="ios-person-outline" slot="prepend"></Icon>
                 </Input>
             </FormItem>
             <FormItem prop="password">
                 <Input type="password" v-model="formInline.password" placeholder="Password">
-                <Icon type="ios-lock-outline" slot="prepend"></Icon>
+                    <Icon type="ios-lock-outline" slot="prepend"></Icon>
                 </Input>
             </FormItem>
             <FormItem>
                 <Button type="primary" @click="handleLogin()">登录</Button>
+                <label style="margin: 5px;" v-if="tried===true">{{msg}}</label>
             </FormItem>
         </Form>
-        <p v-if="success">登录成功，点击确定</p>
+        <p v-if="success">登录成功，点击其他部分继续浏览</p>
     </div>
 </template>
 <script>
@@ -27,6 +28,8 @@
             return {
                 userList: [],
                 success: false,
+                msg: "",
+                tried: false,
                 formInline: {
                     user: '',
                     password: ''
@@ -49,19 +52,22 @@
         },
         methods: {
             handleLogin() {
-                axios.post('http://localhost:8088/api/login',{
+                this.tried = true;
+                axios.post('http://localhost:8088/api/login', {
                     "id": this.formInline.user,
                     "password": this.formInline.password
                 }).then((response) => {
                     let status = response.data;
-                    // console.log(status);
-                    if(status === 'successful') {
-                        // this.$router.push('/information');
+                    if (status === 'successful') {
                         this.success = true;
+                        this.banned = false;
+                        this.$emit('success',false);
+                    } else if (status === 'banned') {
+                        this.banned = true;
+                        this.msg = '用户已被禁用！';
                     } else {
-                        // alert(response.data);
+                        this.msg = '用户名和密码不匹配！';
                     }
-                    // console.log(response);
                 }).catch((error) => {
                     console.log(error);
                 });

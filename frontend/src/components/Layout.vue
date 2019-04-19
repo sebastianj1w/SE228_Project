@@ -66,7 +66,7 @@
                         </router-view>
                     </Col>
                 </Row>
-                <Drawer title="登录" :closable="false" v-model="loginDrawer">
+                <Drawer title="登录" :closable="false" v-on:success="success(res)" v-model="loginDrawer">
                     <Login ref="Login"></Login>
                 </Drawer>
             </Content>
@@ -90,17 +90,17 @@
                 loginDrawer: false,
                 cart: [],
                 logUser: "",
-                orderList: [
-                    {
-                        order_no: "A3772",
-                        userID: "Auser",
-                        title: "尼采哲学经典(套装共5册)",
-                        ISBN: 9787548420460,
-                        price: 9.99,
-                        amount: 2,
-                        total: 19.98,
-                    }
-                ]
+                // orderList: [
+                //     {
+                //         order_no: "A3772",
+                //         userID: "Auser",
+                //         title: "尼采哲学经典(套装共5册)",
+                //         ISBN: 9787548420460,
+                //         price: 9.99,
+                //         amount: 2,
+                //         total: 19.98,
+                //     }
+                // ]
             }
         },
         methods: {
@@ -115,24 +115,16 @@
             },
         },
         mounted: function () {
-            axios.get('http://localhost:8088/getBook/all')
-                .then((response) => {
-                    this.bookList = response.data;
-                    sessionStorage.setItem("bookList", JSON.stringify(this.bookList));
-                    console.log(response);
-                }).catch((error) => {
-                console.log(error);
-            });
             sessionStorage.setItem("login","false");
-            // sessionStorage.setItem("userList", JSON.stringify(this.userList));
-            // sessionStorage.setItem("orderList", JSON.stringify(this.orderList));
-            // console.log(this.cart);
+            sessionStorage.setItem("logUser","");
         },
         updated: function () {
             if((this.login = JSON.parse(sessionStorage.getItem("login"))))
                 this.logUser = sessionStorage.getItem("logUser");
-            // console.log(this.login);
-            // console.log(this.logUser);
+        },
+        success(res) {
+            console.log(101);
+            this.loginDrawer = false;
         }
     }
 </script>

@@ -178,7 +178,7 @@
             }
         },
         mounted() {
-            axios.get('http://localhost:8088/getBook/all')
+            axios.get('http://localhost:8088/book/all')
                 .then((response) => {
                     this.bookList = response.data;
                     this.bookListShow = this.bookList;

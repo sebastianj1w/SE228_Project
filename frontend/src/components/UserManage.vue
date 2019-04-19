@@ -8,7 +8,7 @@
 </template>
 
 <script>
-    // import Abstract from './BookDetail.vue'
+    import axios from 'axios'
 
     export default {
         name: "Books",
@@ -22,7 +22,7 @@
                 columns1: [
                     {
                         title: '用户名',
-                        key: 'ID',
+                        key: 'id',
                     },
                     {
                         title: '邮箱',
@@ -30,7 +30,7 @@
                     },
                     {
                         title: '身份',
-                        key: 'identity'
+                        key: 'iden'
                     },
                     {
                         title: '是否被禁用',
@@ -46,7 +46,7 @@
                             return h('div', [
                                 h('Button', {
                                     props: {
-                                        type: 'primary',
+                                        type: (params.row.ban)?'primary':'error',
                                         size: 'small'
                                     },
                                     style: {
@@ -54,35 +54,19 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.$Message.success('已解除禁用!');
-                                            let ID = params.row.ID;
-                                            for (let i in this.userList){
-                                                if (this.userList[i].ID === ID){
-                                                    this.userList[i].ban = false;
-                                                    sessionStorage.setItem('userList', JSON.stringify(this.userList));
-                                                }
-                                            }
+                                            this.$Message.success((params.row.ban)?'已解除禁用!':'已禁止使用！');
+                                            let ID = params.row.id;
+                                            // console.log('http://localhost:8088/user/ban?id='+ID+'&op='+params.row.ban===1)
+                                            axios.get('http://localhost:8088/user/ban?id='+ID+'&op='+((params.row.ban)?'0':'1'))
+                                                .then((response) => {
+                                                    this.updateInfo();
+                                                })
+                                                .catch((error) => {
+                                                console.log(error);
+                                            });
                                         }
                                     }
-                                }, '解禁'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.$Message.success('已禁止使用!');
-                                            let ID = params.row.ID;
-                                            for (let i in this.userList){
-                                                if (this.userList[i].ID === ID){
-                                                    this.userList[i].ban = true;
-                                                    sessionStorage.setItem('userList', JSON.stringify(this.userList));
-                                                }
-                                            }
-                                        }
-                                    }
-                                }, '禁用')
+                                }, (params.row.ban)?'解禁':'禁用')
                             ]);
                         }
                     }
@@ -108,12 +92,26 @@
             handleSearch() {
                 this.userListShow = this.userList;
                 this.userListShow = this.search(this.userList, {ID: this.searchConName1});
+            },
+            updateInfo() {
+                axios.get('http://localhost:8088/user/list')
+                    .then((response) => {
+                        this.userList = response.data;
+                        this.userListShow = this.userList;
+                    }).catch((error) => {
+                    console.log(error);
+                });
             }
         },
         mounted() {
-            this.userList = JSON.parse(sessionStorage.getItem("userList"));
+            axios.get('http://localhost:8088/user/list')
+                .then((response) => {
+                    this.userList = response.data;
+                    this.userListShow = this.userList;
+                }).catch((error) => {
+                console.log(error);
+            });
             this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 100;
-            this.userListShow = this.userList;
         },
     }
 </script>
