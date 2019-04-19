@@ -57,16 +57,16 @@
                     .then((response) => {
                         if (response.data === 'conflict') {
                             callback(new Error('用户名已被占用'));
-                            console.log(response);
+                            // console.log(response.data);
+                            // console.log(response.data==='conflict');
+                        }else if (value.length < 4) {
+                            callback(new Error('用户名太短'));
+                        } else {
+                            callback();
                         }
                     }).catch((error) => {
                     console.log(error);
                 });
-                if (value.length < 4) {
-                    callback(new Error('用户名太短'));
-                } else {
-                    callback();
-                }
             };
             const validatePass = (rule, value, callback) => {
                 if (value.length < 6) {

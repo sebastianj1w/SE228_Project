@@ -1,76 +1,83 @@
 <template>
     <div style="min-height: 500px;">
         <Input size="large" v-model="searchConName1" placeholder="输入书籍标题来开始检索...">
-        <Button slot="append" icon="ios-search" @click.prevent="handleSearch"></Button>
+            <Button slot="append" icon="ios-search" @click.prevent="handleSearch"></Button>
         </Input>
         <Table ref="table" :height="tableHeight" :columns="columns1" :data="bookListShow"></Table>
     </div>
 </template>
 
 <script>
+    import axios from 'axios'
 
     export default {
         name: "Books",
-        components: {
-        },
+        components: {},
         data() {
             return {
                 searchConName1: '',
-                tableHeight: 450,
+                // tableHeight: 450,
                 columns1: [
+                    {
+                        title: '封面',
+                        render: (h, params) => {
+                            let url = '/books/' + params.row.id;
+                            let src = require("../assets/" + params.row.id + "_ii_cover.jpg");
+                            // console.log(src);
+                            return h('img', {
+                                    attrs: {
+                                        src: src,
+                                        height: 100,
+                                        width: 70,
+                                        style: "margin-top: 3px;"
+                                    }
+                                }
+                            )
+                        },
+                        width: 93,
+                    },
                     {
                         title: '标题',
                         key: 'title',
                         render: (h, params) => {
-                            let url = '/books/' + params.row.ID;
-                            let src = require("../assets/"+params.row.ID + "_ii_cover.jpg");
-                            return h('Poptip', {
-                                    attrs: {
-                                        trigger: "hover",
-                                        content: "content"
-                                    }
-                                },
-                                [h('router-link', {
-                                    attrs: {
-                                        to: url,
-                                    }
-                                }, params.row.title),h('img', {
-                                    attrs: {
-                                        src: src,
-                                        height: 200,
-                                    },
-                                    slot: "content",
-                                })]
-                            )
+                            let url = '/books/' + params.row.id;
+                            let src = require("../assets/" + params.row.id + "_ii_cover.jpg");
+                            // console.log(src);
+                            return h('router-link', {
+                                attrs: {
+                                    to: url,
+                                }
+                            }, params.row.title)
                         }
                     },
                     {
                         title: '作者',
                         key: 'author'
                     },
-                    {
-                        title: '出版社',
-                        key: 'publisher'
-                    },
+                    // {
+                    //     title: '出版社',
+                    //     key: 'publisher'
+                    // },
                     {
                         title: 'ISBN',
-                        key: 'ISBN'
+                        key: 'isbn'
                     },
                     {
                         title: '价格',
                         key: 'price',
+                        width: 80,
                         sortable: true
                     },
                     {
-                        title: '当前库存',
+                        title: '库存',
                         key: 'stock',
-                        width: 120,
+                        width: 80,
                         sortable: true
                     },
                     {
                         title: '操作',
                         key: 'action',
-                        width: 150,
+                        width: 145,
                         align: 'center',
                         render: (h) => {
                             return h('div', [
@@ -104,13 +111,7 @@
                     }
                 ],
                 bookList: [],
-                bookListShow: [
-                    {
-                        title: '三体1：地球往事',
-                        author: '刘慈欣',
-                        price: 16.99
-                    },
-                ]
+                bookListShow: []
             }
         },
         methods: {
@@ -133,8 +134,14 @@
             },
         },
         mounted() {
-            this.bookList = JSON.parse(sessionStorage.getItem("bookList"));
-            this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 100;
+            axios.get('http://localhost:8088/book/all')
+                .then((response) => {
+                    this.bookList = response.data;
+                    this.bookListShow = this.bookList;
+                }).catch((error) => {
+                console.log(error);
+            });
+            // this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 100;
             this.bookListShow = this.bookList;
         },
     }
