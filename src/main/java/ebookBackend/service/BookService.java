@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class BookService {
@@ -18,7 +19,7 @@ public class BookService {
         BooksExample bookBasicExample = new BooksExample();
         BooksExample.Criteria criteria = bookBasicExample.createCriteria();
         criteria.andIdEqualTo(id);
-        System.out.println(id);
+//        System.out.println(id);
         List<Books> bdl = booksMapper.selectByExample(bookBasicExample);
         if (bdl.size()>0)
             return bdl.get(0);
@@ -37,6 +38,8 @@ public class BookService {
     }
 //
     public int insert(Books book) {
+        String uuid = UUID.randomUUID().toString().replaceAll("-","");
+        book.setId(uuid);
         return booksMapper.insert(book);
     }
 //

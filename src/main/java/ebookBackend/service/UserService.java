@@ -56,9 +56,12 @@ public class UserService {
         return userMapper.insert(user);
     }
 
-//    public int updateUser(User user) {
-//        return userMapper.updateUser(user);
-//    }
+    public int update(User user) {
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        criteria.andIdEqualTo(user.getId());
+        return userMapper.updateByExampleSelective(user, userExample);
+    }
 
 //    public int deleteUser(int id) {
 ////        return userMapper.deleteUser(id);

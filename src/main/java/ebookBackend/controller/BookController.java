@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -32,6 +33,7 @@ public class BookController {
     @RequestMapping(path = "/update", method = RequestMethod.POST)
     @ResponseBody
     public int update(@RequestBody Books book) {
+        System.out.println("1");
         return bookService.update(book);
     }
 
@@ -45,5 +47,11 @@ public class BookController {
     @ResponseBody
     public int deleteBook(@RequestParam String id) {
         return bookService.delete(id);
+    }
+
+    @RequestMapping(path = "/getprice", method = RequestMethod.GET)
+    @ResponseBody
+    public double price(@RequestParam String id) {
+        return bookService.get(id).getPrice().doubleValue();
     }
 }
