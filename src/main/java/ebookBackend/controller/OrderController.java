@@ -2,11 +2,15 @@ package ebookBackend.controller;
 
 //import ebookBackend.entity.User;
 
+import ebookBackend.entity.Items;
 import ebookBackend.entity.Order;
 import ebookBackend.entity.OrderWithItems;
 import ebookBackend.service.OrderService;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/order")
@@ -26,14 +30,11 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-//    @ResponseBody
-//    @RequestMapping("/list")
-//    public List<User> list() {
-////        List<User> list = userService.listAllUser();
-////        System.out.println("size:" + list.size());
-////        return list;
-//        return null;
-//    }
+    @ResponseBody
+    @RequestMapping("/getByUser")
+    public List<Order> list(@RequestParam String Uid) {
+        return orderService.getByUserId(Uid);
+    }
 
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     public Order insertOrder(@RequestBody OrderWithItems order) {
@@ -41,5 +42,10 @@ public class OrderController {
         return  orderService.makeOrder(order);
     }
 
+    @RequestMapping(value = "/getItems", method = RequestMethod.GET)
+    public List<Items> insertOrder(@RequestParam String Oid) {
+//        order.generateItemList();
+        return orderService.getItems(Oid);
+    }
 
 }
