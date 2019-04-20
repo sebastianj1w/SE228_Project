@@ -84,14 +84,11 @@
         },
         mounted: function () {
             this.ID = this.$route.params.ID;
-            axios.get('http://localhost:8088/getBook/information?ID='+this.ID.toString())
+            axios.get('http://localhost:8088/book/information?ID='+this.ID.toString())
                 .then((response) => {
                     this.item = response.data;
-                    // console.log(this.item.abstraction);
                     this.item.abstraction = this.item.abstraction.replace(/\\n/g, "\n");
-                    // console.log(this.item.abstraction);
                     this.item.catalogue = this.item.catalogue.replace(/\\n/g, "\n");
-                    // console.log(response);
                 }).catch((error) => {
                 console.log(error);
             });

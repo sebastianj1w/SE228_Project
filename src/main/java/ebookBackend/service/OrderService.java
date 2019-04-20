@@ -18,7 +18,7 @@ public class OrderService {
     @Autowired
     ItemsMapper itemsMapper;
     @Autowired
-    BooksMapper bookBasicMapper;
+    BooksMapper bookMapper;
 
     public Order getByOrderId(String orderId) {
         OrderExample orderExample = new OrderExample();
@@ -43,7 +43,7 @@ public class OrderService {
             BooksExample.Criteria criteria = bookBasicExample.createCriteria();
             criteria.andIdEqualTo(item.getBookid());
 
-            item.setValue(bookBasicMapper.selectByExample(bookBasicExample).get(0).getPrice());
+            item.setValue(bookMapper.selectByExample(bookBasicExample).get(0).getPrice());
         }
 
         BigDecimal total = new BigDecimal("0");
@@ -56,6 +56,13 @@ public class OrderService {
 
         for (Items item: items){
             itemsMapper.insert(item);
+
+            BooksExample booksExample = new BooksExample();
+            BooksExample.Criteria criteria = booksExample.createCriteria();
+            criteria.andIdEqualTo(item.getBookid());
+            Books book = bookMapper.selectByExample(booksExample).get(0);
+            book.setStock(book.getStock()-item.getAmount());
+            bookMapper.updateByExampleSelective(book, booksExample);
         }
 
         return order;

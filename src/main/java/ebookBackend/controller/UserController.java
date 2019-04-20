@@ -19,26 +19,32 @@ public class UserController {
     @ResponseBody
     @RequestMapping("/detail")
     public User detail(@RequestParam String id) {
-        User user = new User();
-        user.setId(id);
-        user.setIden("user");
-        user.setMail("china");
+        User user = userService.get(id);
+        user.setPassword(null);
         return user;
+    }
+
+    @ResponseBody
+    @RequestMapping("/conflict")
+    public String conflict(@RequestParam String id) {
+        User user = userService.get(id);
+        if (user.getId()!=null)
+            if (user.getId().equals(id))
+                return "conflict";
+        return "no-conflict";
     }
 
     @ResponseBody
     @RequestMapping("/list")
     public List<User> list() {
-//        List<User> list = userService.listAllUser();
-//        System.out.println("size:" + list.size());
-//        return list;
-        return null;
+        return userService.getall();
     }
 
     @ResponseBody
     @RequestMapping(value = "/sign_up", method = RequestMethod.POST)
     public int insertUser(@RequestBody User user) {
         user.setIden("user");
+        user.setCart("");
         return userService.insertUser(user);
     }
 
@@ -47,6 +53,31 @@ public class UserController {
     public String banUser(@RequestParam String id, @RequestParam int op) {
         userService.banUser(id, op);
         return "success";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/addcart", method = RequestMethod.GET)
+    public String addCart(@RequestParam String Uid, @RequestParam String Bid) {
+        User user =  userService.get(Uid);
+        user.setCart(user.getCart()+Bid+";");
+        userService.update(user);
+        return user.getCart();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/getcart", method = RequestMethod.GET)
+    public String getCart(@RequestParam String Uid) {
+        User user =  userService.get(Uid);
+        return user.getCart();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/cleancart", method = RequestMethod.GET)
+    public String cleanCart(@RequestParam String Uid) {
+        User user =  userService.get(Uid);
+        user.setCart("");
+        userService.update(user);
+        return user.getCart();
     }
 
 

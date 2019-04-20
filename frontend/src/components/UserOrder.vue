@@ -8,10 +8,12 @@
 </template>
 
 <script>
-
+    import axios from 'axios'
+    import expandRow from './OrderExpand.vue'
     export default {
         name: "OrderManage",
         components: {
+            expandRow: expandRow,
         },
         data() {
             return {
@@ -19,31 +21,28 @@
                 tableHeight: 450,
                 columns1: [
                     {
-                        title: '订单号',
-                        key: 'order_no',
+                        type: 'expand',
+                        width: 30,
+                        render: (h, params) => {
+                            return h(expandRow, {
+                                props: {
+                                    'v-bind:itemList=': params.row.items,
+                                },
+                            })
+                        }
                     },
                     {
                         title: '所购书名',
                         key: 'title'
                     },
                     {
-                        title: 'ISBN',
-                        key: 'ISBN'
-                    },
-                    {
-                        title: '价格',
-                        key: 'price',
-                        sortable: true
-                    },
-                    {
-                        title: '数量',
-                        key: 'amount',
-                        sortable: true
-                    },
-                    {
                         title: '总价',
                         key: 'total',
                         sortable: true
+                    },
+                    {
+                        title: '订单号',
+                        key: 'orderid',
                     },
                     {
                         title: '操作',
@@ -106,13 +105,27 @@
             },
         },
         mounted() {
-            let tempList = JSON.parse(sessionStorage.getItem("orderList"));
             this.logUser = sessionStorage.getItem("logUser");
-            for (let i in tempList) {
-                if (tempList[i].userID === this.logUser) {
-                    this.orderList.push(tempList[i]);
-                }
-            }
+            let that = this;
+            // let tempList = JSON.parse(sessionStorage.getItem("orderList"));
+            // this.logUser = sessionStorage.getItem("logUser");
+            // for (let i in tempList) {
+            //     if (tempList[i].userID === this.logUser) {
+            //         this.orderList.push(tempList[i]);
+            //     }
+            // }
+            axios.get('http://localhost:8088/order/getByUser?Uid='+that.logUser)
+                .then((response)=>{
+                    let orderList = response.data;
+                    that.orderListShow = orderList;
+                    that.orderList = orderList;
+                    for (let i in that.orderList) {
+                        axios.get('http://localhost:8088/order/getItems?Oid='+that.orderList[i].orderid)
+                            .then((response)=>{
+                                that.orderList[i].items = response.data;
+                            });
+                    }
+                });
             this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 100;
             this.orderListShow = this.orderList;
         },

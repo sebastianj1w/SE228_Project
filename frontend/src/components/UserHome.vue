@@ -4,7 +4,7 @@
             <Col span="5">
                 <Menu theme="light" :active-name="a_page" style="z-index: 0;width: 100%;">
                     <MenuGroup title="系统管理" v-if="adminMode">
-                        <router-link :to="'/user/'+userID+'/bookDetail-manage'">
+                        <router-link :to="'/user/'+userID+'/book-manage'">
                             <MenuItem name="11">
                                 <Icon type="md-document"/>
                                 库存管理
@@ -109,16 +109,17 @@
 </template>
 
 <script>
-    // import Cart from "./Cart";
+    import axios from "axios";
+
     export default {
         name: "UserHome",
-        // components: {Cart},
         data() {
             return {
                 adminMode: false,
-                userList: [],
-                userID: '',
+                // userList: [],
+                // userID: '',
                 a_page: '1',
+                userInfo: {},
                 login: false,
             }
         },
@@ -128,7 +129,7 @@
             this.login = JSON.parse(sessionStorage.getItem("login"));
             for (let i in this.userList) {
                 if (this.userList[i].ID === this.userID) {
-                    if (this.userList[i].identity === 'Admin') {
+                    if (this.userList[i].identity === 'admin') {
                         this.adminMode = true;
                         this.a_page = '11';
                         break;
@@ -137,7 +138,20 @@
                         break;
                 }
             }
-
+            let id = sessionStorage.getItem("logUser");
+            console.log(id);
+            axios.get('http://localhost:8088/user/detail?id='+id)
+                .then((response) => {
+                this.userInfo = response.data;
+                console.log(this.userInfo);
+                if(this.userInfo.iden === 'admin') {
+                    this.adminMode = true;
+                    this.a_page = '11';
+                }
+                // console.log(response);
+            }).catch((error) => {
+                console.log(error);
+            });
         }
     }
 </script>

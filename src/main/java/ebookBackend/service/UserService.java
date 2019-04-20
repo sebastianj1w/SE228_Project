@@ -6,6 +6,7 @@ import ebookBackend.entity.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -15,7 +16,7 @@ public class UserService {
     @Autowired
     UserMapper userMapper;
 
-//    public List<User> listAllUser() {
+    //    public List<User> listAllUser() {
 //        return userInfoMapper.listAllUser();
 //    }
 //
@@ -24,9 +25,21 @@ public class UserService {
         UserExample.Criteria criteria = userExample.createCriteria();
         criteria.andIdEqualTo(id);
         List<User> bdl = userMapper.selectByExample(userExample);
-        if (bdl.size()>0)
+        if (bdl.size() > 0)
             return bdl.get(0);
         return new User();
+    }
+
+    public List<User> getall() {
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        List<User> bdl = userMapper.selectByExample(userExample);
+        for (User user:bdl) {
+            user.setPassword("");
+        }
+        if (bdl.size() > 0)
+            return bdl;
+        return new ArrayList<>();
     }
 
     public int banUser(String id, int op) {
@@ -43,9 +56,12 @@ public class UserService {
         return userMapper.insert(user);
     }
 
-//    public int updateUser(User user) {
-//        return userMapper.updateUser(user);
-//    }
+    public int update(User user) {
+        UserExample userExample = new UserExample();
+        UserExample.Criteria criteria = userExample.createCriteria();
+        criteria.andIdEqualTo(user.getId());
+        return userMapper.updateByExampleSelective(user, userExample);
+    }
 
 //    public int deleteUser(int id) {
 ////        return userMapper.deleteUser(id);

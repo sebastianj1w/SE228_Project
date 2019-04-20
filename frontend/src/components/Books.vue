@@ -56,7 +56,7 @@
                         key: 'title',
                         render: (h, params) => {
                             let url = '/books/' + params.row.id;
-                            let src = require("../assets/" + params.row.id + "_ii_cover.jpg");
+                            // let src = require("../assets/" + params.row.id + "_ii_cover.jpg");
                             // console.log(src);
                             return h('router-link', {
                                 attrs: {
@@ -168,17 +168,19 @@
                 }
             },
             addToCart(ID) {
-                let amount = JSON.parse(sessionStorage.getItem(ID));
-                if (amount !== null) {
-                    amount = parseInt(amount) + 1;
-                    sessionStorage.setItem(ID, amount.toString());
-                } else
-                    sessionStorage.setItem(ID, '1');
-
+                if (!JSON.parse(sessionStorage.getItem("login"))) {
+                    alert("请登录！");
+                    return;
+                }
+                let uid = sessionStorage.getItem("logUser");
+                axios.get('http://localhost:8088/user/addcart?Uid='+uid+"&Bid="+ID)
+                    .then((response) => {
+                        console.log("send add cart request");
+                    });
             }
         },
         mounted() {
-            axios.get('http://localhost:8088/getBook/all')
+            axios.get('http://localhost:8088/book/all')
                 .then((response) => {
                     this.bookList = response.data;
                     this.bookListShow = this.bookList;

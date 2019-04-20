@@ -26,6 +26,7 @@ public class OrderWithItems {
         int size = itemStrs.length;
         String[] tmp;
         for (int i=0;i<size;i++){
+            if (itemStrs[i].length()<1) continue;
             tmp = itemStrs[i].split(":");
 
             Items tmpItem = new Items();
