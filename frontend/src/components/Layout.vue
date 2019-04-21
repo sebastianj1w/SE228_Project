@@ -111,6 +111,7 @@
                     this.login = false;
                     sessionStorage.setItem("login","false");
                     this.$refs.Login.success = false;
+                    this.$router.push('/');
                 }
             },
         },

@@ -31,12 +31,22 @@ public class OrderController {
     OrderService orderService;
 
     @ResponseBody
+    @RequestMapping("/getAll")
+    public List<Order> listAll() {
+        return orderService.getAll();
+    }
+
+    @ResponseBody
     @RequestMapping("/getByUser")
     public List<Order> list(@RequestParam String Uid) {
-        List<Order> orderList = orderService.getByUserId(Uid);
-//        SimpleDateFormat sf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        System.out.println(sf.format(orderList.get(0).getDate()));
         return orderService.getByUserId(Uid);
+    }
+
+    @ResponseBody
+    @RequestMapping("/getByUserAndDate")
+    public List<Order> listByMonth(
+            @RequestParam String Uid, @RequestParam String date1, @RequestParam String date2) {
+        return orderService.getByUserAndDate(Uid, date1, date2);
     }
 
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
