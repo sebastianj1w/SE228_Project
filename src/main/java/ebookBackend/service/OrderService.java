@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,6 +26,7 @@ public class OrderService {
         OrderExample.Criteria criteria = orderExample.createCriteria();
         criteria.andOrderidEqualTo(orderId);
         List<Order> odl = orderMapper.selectByExample(orderExample);
+        System.out.println(odl.get(0).getDate().toString());
         if (odl.size()>0)
             return odl.get(0);
         return new Order();
@@ -42,8 +44,9 @@ public class OrderService {
             BooksExample bookBasicExample = new BooksExample();
             BooksExample.Criteria criteria = bookBasicExample.createCriteria();
             criteria.andIdEqualTo(item.getBookid());
-
-            item.setValue(bookMapper.selectByExample(bookBasicExample).get(0).getPrice());
+            Books book = bookMapper.selectByExample(bookBasicExample).get(0);
+            item.setValue(book.getPrice());
+            order.setTitle(order.getTitle()+"、"+book.getTitle());
         }
 
         BigDecimal total = new BigDecimal("0");
@@ -52,6 +55,9 @@ public class OrderService {
         }
 
         order.setTotal(total);
+        order.setState(0);
+        order.setDate(new BigDecimal(new Date().getTime()));
+
         orderMapper.insert(order);
 
         for (Items item: items){
