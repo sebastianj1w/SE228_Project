@@ -57,19 +57,7 @@ const routes = [
                 component: OrderManager,
             },
             {
-                path: 'all-orders',
-                component: UserOrder,
-            },
-            {
-                path: 'pending-orders',
-                component: UserOrder,
-            },
-            {
-                path: 'no-evaluate-orders',
-                component: UserOrder,
-            },
-            {
-                path: 'finished-orders',
+                path: 'orders/:state',
                 component: UserOrder,
             },
             {

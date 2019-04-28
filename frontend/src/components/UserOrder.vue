@@ -1,7 +1,7 @@
 <template>
     <div style="min-height: 500px;">
         <Input size="large" v-model="searchConName1" placeholder="输入来开始检索...">
-        <Button slot="append" icon="ios-search" @click.prevent="handleSearch"></Button>
+            <Button slot="append" icon="ios-search" @click.prevent="handleSearch"></Button>
         </Input>
         <Table ref="table" :height="tableHeight" :columns="columns1" :data="orderListShow"></Table>
     </div>
@@ -10,8 +10,10 @@
 <script>
     import axios from 'axios'
     import expandRow from './OrderExpand.vue'
+
     export default {
         name: "OrderManage",
+        props: ['orderState'],
         components: {
             expandRow: expandRow,
         },
@@ -24,21 +26,32 @@
                         type: 'expand',
                         width: 30,
                         render: (h, params) => {
+                            // console.log(params.row.items);
                             return h(expandRow, {
                                 props: {
-                                    'v-bind:itemList=': params.row.items,
+                                    orderid: params.row.orderid,
                                 },
                             })
                         }
                     },
                     {
                         title: '所购书名',
-                        key: 'title'
+                        key: 'titleToShow'
+                    },
+                    {
+                        title: '日期',
+                        key: 'time'
                     },
                     {
                         title: '总价',
                         key: 'total',
-                        sortable: true
+                        sortable: true,
+                        width: 100
+                    },
+                    {
+                        title: '状态',
+                        key: 'state',
+                        width: 70
                     },
                     {
                         title: '订单号',
@@ -49,39 +62,100 @@
                         key: 'action',
                         width: 150,
                         align: 'center',
-                        render: (h) => {
-                            return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.$Message.success('请求已发送!');
+                        render: (h, params) => {
+                            if (params.row.state === 0)
+                                return h('div', [
+                                    h('Button', {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small',
+
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.success('请求已发送!');
+                                            }
                                         }
-                                    }
-                                }, '修改'),
-                                h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.$Message.success('请求已发送!');
+                                    }, '修改'),
+                                    h('Button', {
+                                        props: {
+                                            type: 'error',
+                                            size: 'small'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.success('请求已发送!');
+                                            }
                                         }
-                                    }
-                                }, '删除')
-                            ]);
+                                    }, '取消')
+                                ]);
+                            else if (params.row.state === 1)
+                                return h('div', [
+                                    h('Button', {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small',
+                                            // disabled: '',
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.success('请求已发送!');
+                                            }
+                                        }
+                                    }, '评价'),
+                                    h('Button', {
+                                        props: {
+                                            type: 'error',
+                                            size: 'small'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.success('请求已发送!');
+                                            }
+                                        }
+                                    }, '删除')
+                                ]);
+                            else
+                                return h('div', [
+                                    h('Button', {
+                                        props: {
+                                            type: 'primary',
+                                            size: 'small',
+                                            disabled: '',
+                                        },
+                                        style: {
+                                            marginRight: '5px'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.success('请求已发送!');
+                                            }
+                                        }
+                                    }, '修改'),
+                                    h('Button', {
+                                        props: {
+                                            type: 'error',
+                                            size: 'small'
+                                        },
+                                        on: {
+                                            click: () => {
+                                                this.$Message.success('请求已发送!');
+                                            }
+                                        }
+                                    }, '删除')
+                                ]);
                         }
                     }
                 ],
                 orderList: [],
                 orderListShow: [],
+                orderListStore: [],
                 logUser: ""
             }
         },
@@ -99,36 +173,76 @@
                 }
                 return res;
             },
+            timestampToTime(timestamp) {
+                let date = new Date(timestamp);
+                let Y = date.getFullYear() + '-';
+                let M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                let D = date.getDate() + ' ';
+                let h = date.getHours() + ':';
+                let m = date.getMinutes() + ':';
+                let s = date.getSeconds();
+                return Y + M + D + h + m + s;
+            },
+            titleToShow(title) {
+                let index = 0;
+                if ((index = title.indexOf("、")) >= 0) {
+                    return "《" + title.substr(0, index) + "》" + "等";
+                } else
+                    return title;
+            },
             handleSearch() {
                 this.orderListShow = this.orderList;
                 this.orderListShow = this.search(this.orderList, {title: this.searchConName1});
+                console.log(this.orderList);
             },
+            changeList() {
+                if (this.orderState > 10) {
+                    this.orderList = this.orderListStore;
+                    this.orderListShow = this.orderList;
+                    return;
+                }
+                let temp = [];
+                console.log(this.orderState);
+                for (let i = 0; i < this.orderListStore.length; i++) {
+                    if (this.orderListStore[i].state === this.orderState){
+                        temp.push(this.orderListStore[i]);
+                    }
+                }
+                this.orderList = temp;
+                this.orderListShow = this.orderList;
+                console.log(333321);
+            }
         },
         mounted() {
+            this.state = this.$route.params.state;
             this.logUser = sessionStorage.getItem("logUser");
             let that = this;
-            // let tempList = JSON.parse(sessionStorage.getItem("orderList"));
-            // this.logUser = sessionStorage.getItem("logUser");
-            // for (let i in tempList) {
-            //     if (tempList[i].userID === this.logUser) {
-            //         this.orderList.push(tempList[i]);
-            //     }
-            // }
-            axios.get('http://localhost:8088/order/getByUser?Uid='+that.logUser)
-                .then((response)=>{
-                    let orderList = response.data;
-                    that.orderListShow = orderList;
-                    that.orderList = orderList;
-                    for (let i in that.orderList) {
-                        axios.get('http://localhost:8088/order/getItems?Oid='+that.orderList[i].orderid)
-                            .then((response)=>{
-                                that.orderList[i].items = response.data;
-                            });
+            axios.get('http://localhost:8088/order/getByUser?Uid=' + that.logUser)
+                .then((response) => {
+                    that.orderList = response.data;
+                    for (let i = 0; i < that.orderList.length; i++) {
+                        if (that.orderList[i].state !== this.state){
+                            that.orderList[i].time = that.timestampToTime(that.orderList[i].date);
+                            that.orderList[i].titleToShow = that.titleToShow(that.orderList[i].title);
+                        }
                     }
+                    that.orderListShow = that.orderList;
+                    that.orderListShow[0].titleToShow += " ";
+                    this.orderListStore = this.orderList;
+                    console.log(that.orderList);
+                    this.changeList();
                 });
             this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 100;
-            this.orderListShow = this.orderList;
+            // this.orderListShow = this.orderList;
         },
+        watch: {
+            orderState: {
+                handler() {
+                    console.log(321);
+                    this.changeList();
+                }
+            }
+        }
     }
 </script>
 

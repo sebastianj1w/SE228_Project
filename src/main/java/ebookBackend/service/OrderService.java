@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -19,6 +22,15 @@ public class OrderService {
     ItemsMapper itemsMapper;
     @Autowired
     BooksMapper bookMapper;
+
+    public List<Order> getAll() {
+        OrderExample orderExample = new OrderExample();
+        OrderExample.Criteria criteria = orderExample.createCriteria();
+        List<Order> odl = orderMapper.selectByExample(orderExample);
+        if (odl.size()>0)
+            return odl;
+        return new ArrayList<Order>();
+    }
 
     public Order getByOrderId(String orderId) {
         OrderExample orderExample = new OrderExample();
@@ -42,8 +54,12 @@ public class OrderService {
             BooksExample bookBasicExample = new BooksExample();
             BooksExample.Criteria criteria = bookBasicExample.createCriteria();
             criteria.andIdEqualTo(item.getBookid());
-
-            item.setValue(bookMapper.selectByExample(bookBasicExample).get(0).getPrice());
+            Books book = bookMapper.selectByExample(bookBasicExample).get(0);
+            item.setValue(book.getPrice());
+            if (order.getTitle() != null)
+                order.setTitle(order.getTitle()+"、"+book.getTitle());
+            else
+                order.setTitle(book.getTitle());
         }
 
         BigDecimal total = new BigDecimal("0");
@@ -52,6 +68,9 @@ public class OrderService {
         }
 
         order.setTotal(total);
+        order.setState(0);
+        order.setDate(new BigDecimal(new Date().getTime()));
+
         orderMapper.insert(order);
 
         for (Items item: items){
@@ -74,9 +93,23 @@ public class OrderService {
         criteria.andUseridEqualTo(userId);
         return orderMapper.selectByExample(orderExample);
     }
-//
-//    @Autowired
-//    ItemsMapper itemsMapper;
+
+    public List<Order> getByUserAndDate(String userId, String date1, String date2) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date d2  = null;
+        Date d1 = null;
+        try {
+            d1  = sdf.parse(date1);
+            d2  = sdf.parse(date2);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        OrderExample orderExample = new OrderExample();
+        OrderExample.Criteria criteria = orderExample.createCriteria();
+        criteria.andUseridEqualTo(userId).andDateBetween(new BigDecimal(d1.getTime()),new BigDecimal(d2.getTime()));
+        return orderMapper.selectByExample(orderExample);
+    }
 
     public List<Items> getItems(String orderId) {
         ItemsExample itemsExample = new ItemsExample();

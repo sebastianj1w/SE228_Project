@@ -30,6 +30,12 @@ public class BookController {
         return bookService.get(ID);
     }
 
+    @RequestMapping(path = "/title", method = RequestMethod.GET)
+    @ResponseBody
+    public String title(@RequestParam String ID) {
+        return bookService.get(ID).getTitle();
+    }
+
     @RequestMapping(path = "/update", method = RequestMethod.POST)
     @ResponseBody
     public int update(@RequestBody Books book) {
