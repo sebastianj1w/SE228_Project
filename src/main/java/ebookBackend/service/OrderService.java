@@ -56,7 +56,10 @@ public class OrderService {
             criteria.andIdEqualTo(item.getBookid());
             Books book = bookMapper.selectByExample(bookBasicExample).get(0);
             item.setValue(book.getPrice());
-            order.setTitle(order.getTitle()+"、"+book.getTitle());
+            if (order.getTitle() != null)
+                order.setTitle(order.getTitle()+"、"+book.getTitle());
+            else
+                order.setTitle(book.getTitle());
         }
 
         BigDecimal total = new BigDecimal("0");

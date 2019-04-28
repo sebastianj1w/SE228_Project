@@ -5,7 +5,7 @@
         </div>
         <label>选择时间跨度：</label>
         <Slider style="width: 50%;" v-model="selector.value" :min="selector.min" :max="selector.max"></Slider>
-        <Button type="primary">查看</Button>
+        <Button type="primary" v-on:click="adjustM">查看</Button>
     </Card>
 </template>
 <script>
@@ -14,6 +14,7 @@
     import  'echarts/theme/macarons.js'
     export default {
         props: {
+
             userID: {type: String},
             className: {
                 type: String,
@@ -36,7 +37,7 @@
             return {
                 ok: 0,
                 selector: {
-                    value: 7,
+                    value: 12,
                     min: 3,
                     max: 12,
                 },
@@ -46,15 +47,19 @@
                 // amountData: [1, 5, 0, 0, 7, 3, 0, 0, 0, 0, 0, 0],
                 amountData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 adjustedAmountData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                storeAdjustedAmountData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 // valueData: [9.49, 47.45, 0, 0, 101.83, 41.12, 0, 0, 0, 0,0, 0],
                 valueData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 adjustedValueData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                storeAdjustedValueData: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
                 xStrings: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                adjustedXStrings: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+                adjustedXStrings: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                storeAdjustedXStrings: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
             }
         },
         mounted() {
             let date = new Date();
+            this.month = date.getMonth();
             let month = date.getMonth() + 1;
             this.year = date.getFullYear();
             // console.log(date1);
@@ -120,7 +125,13 @@
                     this.adjustX(this.month);
                     this.initChart();
                 }
-            }
+            },
+            // selector: {
+            //     handler() {
+            //         this.adjustM();
+            //     },
+            //     deep: true
+            // }
         },
         methods: {
             initChart() {
@@ -189,6 +200,14 @@
                     this.adjustedAmountData[i] = this.amountData[11 - i];
                     this.adjustedValueData[i] = this.valueData[11 - i];
                 }
+                this.storeAdjustedAmountData = this.adjustedAmountData;
+                this.storeAdjustedXStrings = this.adjustedXStrings;
+                this.storeAdjustedValueData = this.adjustedValueData;
+            },
+            adjustM() {
+                this.adjustedValueData = [];
+                this.adjustedAmountData = [];
+                this.adjustedXStrings = [];
             },
             genDateStr(year, month, day) {
                 let m = '';

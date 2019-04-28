@@ -4,3 +4,4 @@ INSERT INTO ebook.dbo.users (id, iden, password, ban, mail, cart) VALUES ('Auser
 INSERT INTO ebook.dbo.users (id, iden, password, ban, mail, cart) VALUES ('RESuB', 'user', 'zxcvbnm', 1, 'RESuB12@hotmail.com', '');
 INSERT INTO ebook.dbo.users (id, iden, password, ban, mail, cart) VALUES ('testID', 'user', '123456a', 0, 'sebastian@ss.com', '');
 INSERT INTO ebook.dbo.users (id, iden, password, ban, mail, cart) VALUES ('TTTTEST', 'user', 'asdfghjkl', 0, 'a@A.om', '');
+INSERT INTO ebook.dbo.users (id, iden, password, ban, mail, cart) VALUES ('wojiushishi', 'user', 'asdfghjkl', 0, 'qqq@1.com', '');

@@ -20,3 +20,5 @@ INSERT INTO ebook.dbo.items (orderID, bookID, amount, value) VALUES ('e9a817728f
 INSERT INTO ebook.dbo.items (orderID, bookID, amount, value) VALUES ('e9a817728f904bc1b8798ff1bb6d954d', '5ab94fc324a64678817a300d422c647b', 2, 24.7400);
 INSERT INTO ebook.dbo.items (orderID, bookID, amount, value) VALUES ('e9a817728f904bc1b8798ff1bb6d954d', '102e2922710941c8b9095efbbb828565', 1, 6.8900);
 INSERT INTO ebook.dbo.items (orderID, bookID, amount, value) VALUES ('e9a817728f904bc1b8798ff1bb6d954d', 'd105412e16314aeba35f8745bc7638e6', 1, 9.4900);
+INSERT INTO ebook.dbo.items (orderID, bookID, amount, value) VALUES ('52b0b5b872a14627bb16ff598c2fedcf', 'd105412e16314aeba35f8745bc7638e6', 1, 9.4900);
+INSERT INTO ebook.dbo.items (orderID, bookID, amount, value) VALUES ('521dc1ffd46344cda15e774be5092374', '5ab94fc324a64678817a300d422c647b', 1, 24.7400);

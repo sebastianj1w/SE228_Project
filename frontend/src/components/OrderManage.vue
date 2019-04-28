@@ -3,7 +3,7 @@
         <Input size="large" v-model="searchConName1" placeholder="输入来开始检索...">
             <Button slot="append" icon="ios-search" @click.prevent="handleSearch"></Button>
         </Input>
-        <Table ref="table" :height="tableHeight" :columns="columns1" :data="orderListShow"></Table>
+        <Table ref="table"  :columns="columns1" :data="orderListShow"></Table>
     </div>
 </template>
 
@@ -173,7 +173,7 @@
                     console.log(that.orderList);
                     // this.changeList();
                 });
-            this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 100;
+            // this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 100;
             // this.orderListShow = this.orderList;
         },
         watch: {
