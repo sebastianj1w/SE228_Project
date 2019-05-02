@@ -1,15 +1,19 @@
 <template>
     <div>
-        <Table style="border: 0" width="100%" ref="table" :columns="columns1"
+        <Table style="margin: 1px" width="100%" ref="table" :columns="columns1"
                :data="bookListShow"></Table>
-        <Button type="primary" style="float: right; margin-right: 40px; margin-top: 20px" v-on:click="makeOrder()">立即下单</Button>
-        <label style="float: right; margin-right: 30px;margin-top: 15px; color: red; font-size: 23px">{{ total }}</label>
+        <Button type="primary" style="float: right; margin-right: 40px; margin-top: 20px" v-on:click="makeOrder()">
+            立即下单
+        </Button>
+        <label style="float: right; margin-right: 30px;margin-top: 15px; color: red; font-size: 23px">{{ total
+            }}</label>
         <label style="float: right;margin-top: 20px; font-size: 15px">总计：</label>
     </div>
 </template>
 
 <script>
     import axios from 'axios'
+
     export default {
         name: "Cart",
         data() {
@@ -68,20 +72,20 @@
                 let that = this;
                 let bookMap = new Map();
                 that.bookListShow = [];
-                axios.get('http://localhost:8088/user/getcart?Uid='+that.logUser)
-                    .then((response)=>{
+                axios.get('http://localhost:8088/user/getcart?Uid=' + that.logUser)
+                    .then((response) => {
                         this.cartStr = response.data;
                         this.cart = this.cartStr.split(";");
-                        for (let i = 0;i<this.cart.length;i++) {
-                            if (this.cart[i]==='') continue;
-                            if (bookMap.get(this.cart[i]) === undefined){
+                        for (let i = 0; i < this.cart.length; i++) {
+                            if (this.cart[i] === '') continue;
+                            if (bookMap.get(this.cart[i]) === undefined) {
                                 bookMap.set(this.cart[i], 1);
                             } else {
-                                bookMap.set(this.cart[i], bookMap.get(this.cart[i])+1);
+                                bookMap.set(this.cart[i], bookMap.get(this.cart[i]) + 1);
                             }
                         }
-                        bookMap.forEach(function(key, value){
-                            axios.get('http://localhost:8088/book/information?ID='+value)
+                        bookMap.forEach(function (key, value) {
+                            axios.get('http://localhost:8088/book/information?ID=' + value)
                                 .then((response) => {
                                     response.data.amount = key;
                                     response.data.total = response.data.price * key;
@@ -91,23 +95,31 @@
                     });
             },
             makeOrder() {
-                console.log("1232");
+                // console.log("1232");
                 let that = this;
                 let orderStr = "";
                 for (let i = 0; i < this.bookListShow.length; i++) {
                     orderStr += (this.bookListShow[i].id + ':' + this.bookListShow[i].amount + ";");
                 }
                 axios.post('http://localhost:8088/order/insert', {
-                    'userid':this.logUser,
-                    'itemStr':orderStr
-                }).then((response)=>{
-                    that.cartStr = "";
-                    axios.get('http://localhost:8088/user/cleancart?Uid='+that.logUser)
-                        .then((response)=>{
-                            console.log(response);
-                        });
-                    console.log(response);
-                    that.updateCart();
+                    'userid': this.logUser,
+                    'itemStr': orderStr
+                }).then((response) => {
+                    if (response.data === "success") {
+                        console.log(123);
+                        axios.get('http://localhost:8088/user/cleancart?Uid=' + that.logUser)
+                            .then((response) => {
+                                // console.log(response);
+                                that.updateCart();
+                                that.cartStr = "";
+                            });
+                    } else {
+                        console.log(1234);
+                        // console.log(response);
+                        alert(response.data);
+                    }
+
+
                 })
             }
         },
@@ -121,7 +133,7 @@
                     }
                     this.total = this.total.toFixed(2);
                 },
-                deep:true
+                deep: true
             }
         }
     }

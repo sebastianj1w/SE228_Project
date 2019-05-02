@@ -136,6 +136,7 @@
         methods: {
             initChart() {
                 this.chart = echarts.init(this.$refs.myEchart,'macarons');
+
                 // 把配置和数据放这里
                 this.chart.setOption({
                     title: {
@@ -208,6 +209,13 @@
                 this.adjustedValueData = [];
                 this.adjustedAmountData = [];
                 this.adjustedXStrings = [];
+                let m = this.selector.value;
+                for (let i = 0; i < m; i++) {
+                    this.adjustedAmountData[i] = this.storeAdjustedAmountData[i+12-m];
+                    this.adjustedXStrings[i] = this.storeAdjustedXStrings[i+12-m];
+                    this.adjustedValueData[i] = this.storeAdjustedValueData[i+12-m];
+                }
+                this.initChart();
             },
             genDateStr(year, month, day) {
                 let m = '';

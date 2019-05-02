@@ -50,9 +50,16 @@ public class OrderController {
     }
 
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
-    public Order insertOrder(@RequestBody OrderWithItems order) {
+    public String insertOrder(@RequestBody OrderWithItems order) {
 //        order.generateItemList();
-        return orderService.makeOrder(order);
+        try {
+            orderService.makeOrder(order);
+            return "success";
+        } catch (Exception e) {
+            System.out.println("sdfsd");
+            return "no stock!";
+        }
+
     }
 
     @RequestMapping(value = "/getItems", method = RequestMethod.GET)

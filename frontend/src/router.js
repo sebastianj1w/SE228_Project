@@ -15,6 +15,7 @@ import Statistics from "./components/Statistics.vue";
 import OrderManager from "./components/OrderManage.vue";
 import UserOrder from "./components/UserOrder.vue";
 import MakeOrder from "./components/MakeOrder.vue";
+import UserInfo from "./components/UserInfo";
 
 // 要告诉 vue 使用 vueRouter
 Vue.use(VueRouter);
@@ -70,7 +71,7 @@ const routes = [
             },
             {
                 path: 'settings',
-                component: NonePage,
+                component: UserInfo,
             },
             {
                 path: 'safety',
