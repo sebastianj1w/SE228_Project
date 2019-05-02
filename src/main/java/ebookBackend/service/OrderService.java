@@ -7,6 +7,7 @@ import ebookBackend.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class OrderService {
         OrderExample orderExample = new OrderExample();
         OrderExample.Criteria criteria = orderExample.createCriteria();
         List<Order> odl = orderMapper.selectByExample(orderExample);
-        if (odl.size()>0)
+        if (odl.size() > 0)
             return odl;
         return new ArrayList<Order>();
     }
@@ -37,12 +38,13 @@ public class OrderService {
         OrderExample.Criteria criteria = orderExample.createCriteria();
         criteria.andOrderidEqualTo(orderId);
         List<Order> odl = orderMapper.selectByExample(orderExample);
-        if (odl.size()>0)
+        if (odl.size() > 0)
             return odl.get(0);
         return new Order();
     }
 
-    public Order makeOrder(OrderWithItems orderWithItems) {
+    @Transactional(rollbackOn=Exception.class)
+    public Order makeOrder(OrderWithItems orderWithItems) throws Exception {
         orderWithItems.generateItemList();
 
         Order order = new Order();
@@ -50,20 +52,20 @@ public class OrderService {
         order.setOrderid(orderWithItems.getOrderid());
 
         List<Items> items = orderWithItems.getItems();
-        for (Items item: items){
+        for (Items item : items) {
             BooksExample bookBasicExample = new BooksExample();
             BooksExample.Criteria criteria = bookBasicExample.createCriteria();
             criteria.andIdEqualTo(item.getBookid());
             Books book = bookMapper.selectByExample(bookBasicExample).get(0);
             item.setValue(book.getPrice());
             if (order.getTitle() != null)
-                order.setTitle(order.getTitle()+"、"+book.getTitle());
+                order.setTitle(order.getTitle() + "、" + book.getTitle());
             else
                 order.setTitle(book.getTitle());
         }
 
         BigDecimal total = new BigDecimal("0");
-        for (Items item: items){
+        for (Items item : items) {
             total = total.add(item.getValue().multiply(new BigDecimal(item.getAmount())));
         }
 
@@ -73,15 +75,23 @@ public class OrderService {
 
         orderMapper.insert(order);
 
-        for (Items item: items){
+        for (Items item : items) {
             itemsMapper.insert(item);
 
             BooksExample booksExample = new BooksExample();
             BooksExample.Criteria criteria = booksExample.createCriteria();
             criteria.andIdEqualTo(item.getBookid());
+
             Books book = bookMapper.selectByExample(booksExample).get(0);
-            book.setStock(book.getStock()-item.getAmount());
-            bookMapper.updateByExampleSelective(book, booksExample);
+
+            if (book.getStock() - item.getAmount() > 0) {
+                System.out.println("sss1");
+                book.setStock(book.getStock() - item.getAmount());
+                bookMapper.updateByExampleSelective(book, booksExample);
+            } else {
+                System.out.println("sss");
+                throw new Exception("no stock");
+            }
         }
 
         return order;
@@ -97,17 +107,17 @@ public class OrderService {
     public List<Order> getByUserAndDate(String userId, String date1, String date2) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-        Date d2  = null;
+        Date d2 = null;
         Date d1 = null;
         try {
-            d1  = sdf.parse(date1);
-            d2  = sdf.parse(date2);
-        }catch (Exception e){
+            d1 = sdf.parse(date1);
+            d2 = sdf.parse(date2);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         OrderExample orderExample = new OrderExample();
         OrderExample.Criteria criteria = orderExample.createCriteria();
-        criteria.andUseridEqualTo(userId).andDateBetween(new BigDecimal(d1.getTime()),new BigDecimal(d2.getTime()));
+        criteria.andUseridEqualTo(userId).andDateBetween(new BigDecimal(d1.getTime()), new BigDecimal(d2.getTime()));
         return orderMapper.selectByExample(orderExample);
     }
 

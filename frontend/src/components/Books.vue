@@ -10,11 +10,7 @@
             </Select>
             <Button slot="append" icon="ios-search" @click.prevent="handleSearch"></Button>
         </Input>
-        <Table ref="table" :height="tableHeight" :columns="columns1" :data="bookListShow"></Table>
-        <router-link to="/home">
-            <Icon type="ios-navigate"></Icon>
-            主页
-        </router-link>
+        <Table ref="table"  :columns="columns1" :data="bookListShow"></Table>
     </div>
 </template>
 

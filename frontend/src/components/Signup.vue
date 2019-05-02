@@ -140,11 +140,6 @@
                 this.$refs[name].resetFields();
             }
         },
-        mounted() {
-            // this.$Message.info({
-            //     content: "没有写后端所以并不会发送数据给后端，也不会记录用户名等信息，本条信息会在10秒后消失",
-            //     duration: 10
-            // });
-        }
+        mounted() {}
     }
 </script>
