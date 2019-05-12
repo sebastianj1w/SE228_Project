@@ -56,7 +56,7 @@ public class OrderController {
             orderService.makeOrder(order);
             return "success";
         } catch (Exception e) {
-            System.out.println("sdfsd");
+//            System.out.println("sdfsd");
             return "no stock!";
         }
 

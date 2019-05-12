@@ -43,5 +43,7 @@
         </table>
         <table tableName="users" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         </table>
+        <table tableName="cart_items" enableCountByExample="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        </table>
     </context>
 </generatorConfiguration>
