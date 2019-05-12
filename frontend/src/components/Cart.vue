@@ -44,13 +44,59 @@
                     },
                     {
                         title: '数量',
-                        key: 'amount'
+                        key: 'amount',
+                        render: (h, params) => {
+                            let that = this;
+                            let display = "";
+                            let display_n = "display: none";
+                            return h('div', {
+                                // attrs: {
+                                //     to: url,
+                                //     // target: '_black'
+                                // }
+                            }, [
+                                h('label', {
+                                    attrs: {
+                                        style: !params.row.editting ? display  + ";margin: 4px" : display_n
+                                    }
+                                }, params.row.amount),
+                                h('Input', {
+                                    attrs: {
+                                        style: params.row.editting ? display  + ";width: 25%"  : display_n,
+                                        value: params.row.amount,
+                                        size: 'small'
+                                    }
+                                },),
+                                h('ButtonGroup', {
+                                    attrs: {
+                                        vertical: true,
+                                        size: "small",
+                                        style: params.row.editting ? display : display_n
+                                    }
+                                }, [
+                                    h('Button', {attrs: {type: "text"}}, '+'), h('Button', {attrs: {type: "text"}}, '-')
+                                ]),
+                                h('Button', {
+                                    attrs: {
+                                        style: "margin: 4px",
+                                        size: 'small'
+                                    },
+                                    on: {
+                                        'click': function () {
+                                            params.row.editting = !params.row.editting;
+                                            that.stringifyCart(params);
+                                        }
+                                    }
+                                }, !params.row.editting ? '编辑' : '保存'),
+                            ])
+                        }
                     },
                     {
                         title: '价格',
                         key: 'price',
                         width: 200,
-                        sortable: true
+                        sortable: true,
+                        editable: true
                     },
                 ],
                 bookList: [],
@@ -78,21 +124,22 @@
                         this.cart = this.cartStr.split(";");
                         for (let i = 0; i < this.cart.length; i++) {
                             if (this.cart[i] === '') continue;
-                            if (bookMap.get(this.cart[i]) === undefined) {
-                                bookMap.set(this.cart[i], 1);
-                            } else {
-                                bookMap.set(this.cart[i], bookMap.get(this.cart[i]) + 1);
-                            }
+                            let temp = this.cart[i].split(":");
+                            bookMap.set(temp[0], parseInt(temp[1]));
                         }
                         bookMap.forEach(function (key, value) {
                             axios.get('http://localhost:8088/book/information?ID=' + value)
                                 .then((response) => {
                                     response.data.amount = key;
                                     response.data.total = response.data.price * key;
+                                    response.data.editting = false;
                                     that.bookListShow.push(response.data);
                                 })
                         })
                     });
+            },
+            stringifyCart(params) {
+                console.log(params);
             },
             makeOrder() {
                 // console.log("1232");
@@ -132,6 +179,12 @@
                         that.total += this.bookListShow[i].total;
                     }
                     this.total = this.total.toFixed(2);
+                    this.cloneBookList = JSON.parse(JSON.stringify(this.bookList)).map(function (item) {
+                        item.editting = false;
+                        item.saving = false;
+                        return item;
+                    });
+                    this.loading = false;
                 },
                 deep: true
             }
