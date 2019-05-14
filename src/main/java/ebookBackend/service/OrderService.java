@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.awt.event.ItemEvent;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -126,5 +127,18 @@ public class OrderService {
         ItemsExample.Criteria criteria = itemsExample.createCriteria();
         criteria.andOrderidEqualTo(orderId);
         return itemsMapper.selectByExample(itemsExample);
+    }
+
+    public void deleteOrder(String orderId) {
+        OrderExample orderExample = new OrderExample();
+        OrderExample.Criteria criteria = orderExample.createCriteria();
+        criteria.andOrderidEqualTo(orderId);
+
+        ItemsExample itemsExample = new ItemsExample();
+        ItemsExample.Criteria criteria1 = itemsExample.createCriteria();
+        criteria1.andOrderidEqualTo(orderId);
+
+        itemsMapper.deleteByExample(itemsExample);
+        orderMapper.deleteByExample(orderExample);
     }
 }

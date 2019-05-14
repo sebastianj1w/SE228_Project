@@ -47,6 +47,7 @@
                         key: 'amount',
                         render: (h, params) => {
                             let that = this;
+                            let a = params.row.amount;
                             let display = "";
                             let display_n = "display: none";
                             return h('div', {
@@ -57,14 +58,20 @@
                             }, [
                                 h('label', {
                                     attrs: {
-                                        style: !params.row.editting ? display  + ";margin: 4px" : display_n
+                                        style: !params.row.editting ? display + ";margin: 4px" : display_n
                                     }
                                 }, params.row.amount),
                                 h('Input', {
                                     attrs: {
-                                        style: params.row.editting ? display  + ";width: 25%"  : display_n,
-                                        value: params.row.amount,
+                                        style: params.row.editting ? display + ";width: 25%" : display_n,
+                                        value: a,
                                         size: 'small'
+                                    },
+                                    on: {
+                                        input: function (event) {
+                                            console.log(event);
+                                            a = event;
+                                        }
                                     }
                                 },),
                                 h('ButtonGroup', {
@@ -83,8 +90,23 @@
                                     },
                                     on: {
                                         'click': function () {
+                                            if (params.row.editting) {
+                                                if (params.row.amount !== a)
+                                                    axios.get('http://localhost:8088/cart/set', {
+                                                        params: {
+                                                            Uid: that.logUser,
+                                                            Bid: params.row.id,
+                                                            amount: a
+                                                        }
+                                                    })
+                                                        .then((response) => {
+                                                            console.log(response);
+                                                            that.updateCart();
+                                                            console.log("send add cart request");
+                                                        });
+                                            }
+
                                             params.row.editting = !params.row.editting;
-                                            that.stringifyCart(params);
                                         }
                                     }
                                 }, !params.row.editting ? '编辑' : '保存'),
@@ -118,14 +140,15 @@
                 let that = this;
                 let bookMap = new Map();
                 that.bookListShow = [];
-                axios.get('http://localhost:8088/user/getcart?Uid=' + that.logUser)
+                axios.get('http://localhost:8088/cart/get?Uid=' + that.logUser)
                     .then((response) => {
-                        this.cartStr = response.data;
-                        this.cart = this.cartStr.split(";");
+                        this.cart = response.data;
+                        console.log(response.data);
+                        // this.cart = this.cartStr.split(";");
                         for (let i = 0; i < this.cart.length; i++) {
-                            if (this.cart[i] === '') continue;
-                            let temp = this.cart[i].split(":");
-                            bookMap.set(temp[0], parseInt(temp[1]));
+                            // if (this.cart[i] === '') continue;
+                            // let temp = this.cart[i].split(":");
+                            bookMap.set(this.cart[i].bid, this.cart[i].amount);
                         }
                         bookMap.forEach(function (key, value) {
                             axios.get('http://localhost:8088/book/information?ID=' + value)
@@ -154,7 +177,7 @@
                 }).then((response) => {
                     if (response.data === "success") {
                         console.log(123);
-                        axios.get('http://localhost:8088/user/cleancart?Uid=' + that.logUser)
+                        axios.get('http://localhost:8088/cart/clean?Uid=' + that.logUser)
                             .then((response) => {
                                 // console.log(response);
                                 that.updateCart();

@@ -55,30 +55,7 @@ public class UserController {
         return "success";
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/addcart", method = RequestMethod.GET)
-    public String addCart(@RequestParam String Uid, @RequestParam String Bid) {
-        User user =  userService.get(Uid);
-        user.setCart(user.getCart()+Bid+";");
-        userService.update(user);
-        return user.getCart();
-    }
 
-    @ResponseBody
-    @RequestMapping(value = "/getcart", method = RequestMethod.GET)
-    public String getCart(@RequestParam String Uid) {
-        User user =  userService.get(Uid);
-        return user.getCart();
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/cleancart", method = RequestMethod.GET)
-    public String cleanCart(@RequestParam String Uid) {
-        User user =  userService.get(Uid);
-        user.setCart("");
-        userService.update(user);
-        return user.getCart();
-    }
 
 
 }

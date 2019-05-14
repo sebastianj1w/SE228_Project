@@ -10,7 +10,7 @@
             </Select>
             <Button slot="append" icon="ios-search" @click.prevent="handleSearch"></Button>
         </Input>
-        <Table ref="table"  :columns="columns1" :data="bookListShow"></Table>
+        <Table ref="table" :columns="columns1" :data="bookListShow"></Table>
     </div>
 </template>
 
@@ -169,7 +169,12 @@
                     return;
                 }
                 let uid = sessionStorage.getItem("logUser");
-                axios.get('http://localhost:8088/user/addcart?Uid='+uid+"&Bid="+ID)
+                axios.get('http://localhost:8088/cart/add', {
+                    params: {
+                        'Uid': uid,
+                        'Bid': ID
+                    }
+                })
                     .then((response) => {
                         console.log("send add cart request");
                     });

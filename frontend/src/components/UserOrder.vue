@@ -3,7 +3,7 @@
         <Input size="large" v-model="searchConName1" placeholder="输入来开始检索...">
             <Button slot="append" icon="ios-search" @click.prevent="handleSearch"></Button>
         </Input>
-        <Table ref="table" :height="tableHeight" :columns="columns1" :data="orderListShow"></Table>
+        <Table ref="table" :columns="columns1" :data="orderListShow"></Table>
     </div>
 </template>
 
@@ -63,6 +63,7 @@
                         width: 150,
                         align: 'center',
                         render: (h, params) => {
+                            let that = this;
                             if (params.row.state === 0)
                                 return h('div', [
                                     h('Button', {
@@ -87,7 +88,13 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.$Message.success('请求已发送!');
+                                                axios.get('http://localhost:8088/order/delete', {
+                                                    params: {
+                                                        Oid: params.row.orderid
+                                                    }
+                                                }).then((response) => {
+                                                    that.getList();
+                                                })
                                             }
                                         }
                                     }, '取消')
@@ -160,6 +167,24 @@
             }
         },
         methods: {
+            getList() {
+                this.state = this.$route.params.state;
+                this.logUser = sessionStorage.getItem("logUser");
+                let that = this;
+                axios.get('http://localhost:8088/order/getByUser?Uid=' + that.logUser)
+                    .then((response) => {
+                        that.orderList = response.data;
+                        for (let i = 0; i < that.orderList.length; i++) {
+                            that.orderList[i].time = that.timestampToTime(that.orderList[i].date);
+                            that.orderList[i].titleToShow = that.titleToShow(that.orderList[i].title);
+                        }
+                        that.orderListShow = that.orderList;
+                        that.orderListShow[0].titleToShow += " ";
+                        this.orderListStore = this.orderList;
+                        // console.log(that.orderList);
+                        this.changeList();
+                    });
+            },
             search(data, argumentObj) {
                 let res = data;
                 let dataClone = data;
@@ -202,15 +227,15 @@
                     return;
                 }
                 let temp = [];
-                console.log(this.orderState);
+                // console.log(this.orderState);
                 for (let i = 0; i < this.orderListStore.length; i++) {
-                    if (this.orderListStore[i].state === this.orderState){
+                    if (this.orderListStore[i].state === this.orderState) {
                         temp.push(this.orderListStore[i]);
                     }
                 }
                 this.orderList = temp;
                 this.orderListShow = this.orderList;
-                console.log(333321);
+                // console.log(333321);
             }
         },
         mounted() {
@@ -221,18 +246,16 @@
                 .then((response) => {
                     that.orderList = response.data;
                     for (let i = 0; i < that.orderList.length; i++) {
-                        if (that.orderList[i].state !== this.state){
-                            that.orderList[i].time = that.timestampToTime(that.orderList[i].date);
-                            that.orderList[i].titleToShow = that.titleToShow(that.orderList[i].title);
-                        }
+                        that.orderList[i].time = that.timestampToTime(that.orderList[i].date);
+                        that.orderList[i].titleToShow = that.titleToShow(that.orderList[i].title);
                     }
                     that.orderListShow = that.orderList;
                     that.orderListShow[0].titleToShow += " ";
                     this.orderListStore = this.orderList;
-                    console.log(that.orderList);
+                    // console.log(that.orderList);
                     this.changeList();
                 });
-            this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 100;
+            // this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 100;
             // this.orderListShow = this.orderList;
         },
         watch: {
