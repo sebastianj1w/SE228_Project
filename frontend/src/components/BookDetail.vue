@@ -73,13 +73,15 @@
         },
         methods: {
             addCart() {
-                // console.log(111);
-                let amount= JSON.parse(sessionStorage.getItem(this.ID));
-                if (amount !== null) {
-                    amount = parseInt(amount) + 1;
-                    sessionStorage.setItem(this.ID, amount.toString());
-                }else
-                sessionStorage.setItem(this.ID, '1');
+                if (!JSON.parse(sessionStorage.getItem("login"))) {
+                    alert("请登录！");
+                    return;
+                }
+                let uid = sessionStorage.getItem("logUser");
+                axios.get('http://localhost:8088/cart/add?Uid='+uid+"&Bid="+this.ID)
+                    .then((response) => {
+                        console.log("send add cart request");
+                    });
             }
         },
         mounted: function () {

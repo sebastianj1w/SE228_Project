@@ -51,20 +51,24 @@ public class OrderController {
 
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     public String insertOrder(@RequestBody OrderWithItems order) {
-//        order.generateItemList();
         try {
             orderService.makeOrder(order);
             return "success";
         } catch (Exception e) {
-//            System.out.println("sdfsd");
             return "no stock!";
         }
+    }
 
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public String deleteOrder(@RequestParam String Oid) {
+        Order order = orderService.getByOrderId(Oid);
+        if (order == null) return "no such order";
+        orderService.deleteOrder(Oid);
+        return "success";
     }
 
     @RequestMapping(value = "/getItems", method = RequestMethod.GET)
     public List<Items> insertOrder(@RequestParam String Oid) {
-//        order.generateItemList();
         return orderService.getItems(Oid);
     }
 
