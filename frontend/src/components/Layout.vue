@@ -7,7 +7,7 @@
         <Layout>
             <Header :style="{position: 'fixed', width: '100%'}" style="z-index: 100">
                 <Menu mode="horizontal" theme="dark" active-name="1" @on-select="TryLogin">
-                    <img class="layout-logo" src="../assets/logo.png"/>
+                    <img class="layout-logo" src="http://192.168.198.1:8088/image/logo.png"/>
                     <div class="layout-nav">
                         <router-link to="/home">
                             <MenuItem name="1">

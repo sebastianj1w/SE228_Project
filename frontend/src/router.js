@@ -16,6 +16,7 @@ import OrderManager from "./components/OrderManage.vue";
 import UserOrder from "./components/UserOrder.vue";
 import MakeOrder from "./components/MakeOrder.vue";
 import UserInfo from "./components/UserInfo";
+import temp from "./components/temp";
 
 // 要告诉 vue 使用 vueRouter
 Vue.use(VueRouter);

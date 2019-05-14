@@ -33,11 +33,11 @@
                         title: '封面',
                         render: (h, params) => {
                             let url = '/books/' + params.row.id;
-                            let src = require("../assets/" + params.row.id + "_ii_cover.jpg");
+                            let src = params.row.id + "_ii_cover.jpg";
                             // console.log(src);
                             return h('img', {
                                     attrs: {
-                                        src: src,
+                                        src: 'http://localhost:8088/image/'+src,
                                         height: 100,
                                         width: 70,
                                         style: "margin-top: 3px;"
@@ -77,12 +77,18 @@
                         title: '价格',
                         key: 'price',
                         sortable: true,
-                        width: 120,
+                        width: 100,
+                    },
+                    {
+                        title: '库存',
+                        key: 'stock',
+                        sortable: true,
+                        width: 90,
                     },
                     {
                         title: '操作',
                         key: 'action',
-                        width: 250,
+                        width: 230,
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [
