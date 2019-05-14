@@ -95,7 +95,7 @@
                 console.log(error);
             });
 
-            this.cover = require('../assets/'+this.ID+'_ii_cover.jpg')
+            this.cover = 'http://192.168.198.1:8088/image/'+this.ID+'_ii_cover.jpg';
         }
     }
 </script>
