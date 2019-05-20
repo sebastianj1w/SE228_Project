@@ -65,4 +65,11 @@ public class CartController {
         cartService.cleanCartItemsByUid(Uid);
         return "";
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public String deleteCartItem(@RequestParam String Uid, @RequestParam String Bid) {
+        cartService.deleteCartItemsByUidAndBid(Uid, Bid);
+        return "";
+    }
 }

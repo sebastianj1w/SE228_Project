@@ -5,6 +5,11 @@
             <input type="file" @change="getFile($event)">
             <button class="button button-primary button-pill button-small" @click="submit($event)">提交</button>
         </form>
+
+        <Upload action="http://localhost:8088/image/upload">
+            <Button icon="ios-cloud-upload-outline">Upload files</Button>
+        </Upload>
+
         <img src="http://localhost:8088/image/2019030515454352754.jpg">
     </div>
 </template>

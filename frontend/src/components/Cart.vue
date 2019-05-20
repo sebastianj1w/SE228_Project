@@ -120,6 +120,35 @@
                         sortable: true,
                         editable: true
                     },
+                    {
+                        title: '操作',
+                        key: 'amount',
+                        render: (h, params) => {
+                            let that = this;
+                            return h('Button', {
+                                attrs: {
+                                    type: 'warning',
+                                    size: 'small'
+                                },
+                                on: {
+                                    'click': function () {
+                                        axios.get('http://localhost:8088/cart/delete', {
+                                            params: {
+                                                Uid: that.logUser,
+                                                Bid: params.row.id,
+                                            }
+                                        })
+                                            .then((response) => {
+                                                console.log(response);
+                                                that.updateCart();
+                                                console.log("send delete cart request");
+                                            });
+                                    }
+                                }
+                            }, "删除")
+                        },
+                        width: 90
+                    },
                 ],
                 bookList: [],
                 bookListShow: [],
