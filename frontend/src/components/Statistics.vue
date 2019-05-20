@@ -11,10 +11,13 @@
 <script>
     import echarts from 'echarts'
     import axios from 'axios'
-    import  'echarts/theme/macarons.js'
+    import 'echarts/theme/macarons.js'
+
     export default {
         props: {
-
+            adminMode : {
+                type: Boolean
+            },
             userID: {type: String},
             className: {
                 type: String,
@@ -68,46 +71,89 @@
             let date0 = this.genDateStr(this.year, month, date.getDate() + 1);
             let date1 = this.genDateStr(this.year, month, 1);
             let date2 = '';
-            axios.get('http://localhost:8088/order/getByUserAndDate?Uid=' + that.userID + '&date1=' + date1 + '&date2=' + date0)
-                .then((response) => {
-                    console.log(response);
-                    let orderList = response.data;
-                    let amount = orderList.length;
-                    let total = 0;
-                    for (let m = 0; m < amount; m++) {
-                        total += orderList[m].total;
-                    }
-                    that.valueData[0] = total;
-                    that.amountData[0] = amount;
-                    // console.log(total);
-                    that.$forceUpdate();
-                    // console.log(this.valueData);
-                    for (let i = 1; i < 12; i++) {
-                        if (i > 1)
-                            date1 = date2;
-                        if (month - i > 0)
-                            date2 = this.genDateStr(this.year, month - i, 1);
-                        else
-                            date2 = this.genDateStr(this.year - 1, month - i + 12, 1);
-                        axios.get('http://localhost:8088/order/getByUserAndDate?Uid=' + that.userID + '&date1=' + date2 + '&date2=' + date1)
-                            .then((response) => {
-                                let orderList = response.data;
-                                let amount = orderList.length;
-                                let total = 0;
-                                for (let m = 0; m < amount; m++) {
-                                    total += orderList[m].total;
-                                }
-                                that.valueData[i] = total;
-                                that.amountData[i] = amount;
-                                // console.log(total);
-                                that.$forceUpdate();
-                                // console.log(this.valueData);
-                                if (i === 11)
-                                    that.ok += 1;
-                            });
+            if (!this.adminMode) {
+                axios.get('http://localhost:8088/order/getByUserAndDate?Uid=' + that.userID + '&date1=' + date1 + '&date2=' + date0)
+                    .then((response) => {
+                        console.log(response);
+                        let orderList = response.data;
+                        let amount = orderList.length;
+                        let total = 0;
+                        for (let m = 0; m < amount; m++) {
+                            total += orderList[m].total;
+                        }
+                        that.valueData[0] = total;
+                        that.amountData[0] = amount;
+                        // console.log(total);
+                        that.$forceUpdate();
+                        // console.log(this.valueData);
+                        for (let i = 1; i < 12; i++) {
+                            if (i > 1)
+                                date1 = date2;
+                            if (month - i > 0)
+                                date2 = this.genDateStr(this.year, month - i, 1);
+                            else
+                                date2 = this.genDateStr(this.year - 1, month - i + 12, 1);
+                            axios.get('http://localhost:8088/order/getByUserAndDate?Uid=' + that.userID + '&date1=' + date2 + '&date2=' + date1)
+                                .then((response) => {
+                                    let orderList = response.data;
+                                    let amount = orderList.length;
+                                    let total = 0;
+                                    for (let m = 0; m < amount; m++) {
+                                        total += orderList[m].total;
+                                    }
+                                    that.valueData[i] = total;
+                                    that.amountData[i] = amount;
+                                    // console.log(total);
+                                    that.$forceUpdate();
+                                    // console.log(this.valueData);
+                                    if (i === 11)
+                                        that.ok += 1;
+                                });
 
-                    }
-                });
+                        }
+                    });
+            } else {
+                axios.get('http://localhost:8088/order/getByDate?date1=' + date1 + '&date2=' + date0)
+                    .then((response) => {
+                        console.log(response);
+                        let orderList = response.data;
+                        let amount = orderList.length;
+                        let total = 0;
+                        for (let m = 0; m < amount; m++) {
+                            total += orderList[m].total;
+                        }
+                        that.valueData[0] = total;
+                        that.amountData[0] = amount;
+                        // console.log(total);
+                        that.$forceUpdate();
+                        // console.log(this.valueData);
+                        for (let i = 1; i < 12; i++) {
+                            if (i > 1)
+                                date1 = date2;
+                            if (month - i > 0)
+                                date2 = this.genDateStr(this.year, month - i, 1);
+                            else
+                                date2 = this.genDateStr(this.year - 1, month - i + 12, 1);
+                            axios.get('http://localhost:8088/order/getByDate?date1=' + date2 + '&date2=' + date1)
+                                .then((response) => {
+                                    let orderList = response.data;
+                                    let amount = orderList.length;
+                                    let total = 0;
+                                    for (let m = 0; m < amount; m++) {
+                                        total += orderList[m].total;
+                                    }
+                                    that.valueData[i] = total;
+                                    that.amountData[i] = amount;
+                                    // console.log(total);
+                                    that.$forceUpdate();
+                                    // console.log(this.valueData);
+                                    if (i === 11)
+                                        that.ok += 1;
+                                });
+
+                        }
+                    });
+            }
 
             // this.adjustX(this.month);
             // this.initChart();
@@ -135,7 +181,7 @@
         },
         methods: {
             initChart() {
-                this.chart = echarts.init(this.$refs.myEchart,'macarons');
+                this.chart = echarts.init(this.$refs.myEchart, 'macarons');
 
                 // 把配置和数据放这里
                 this.chart.setOption({
@@ -211,9 +257,9 @@
                 this.adjustedXStrings = [];
                 let m = this.selector.value;
                 for (let i = 0; i < m; i++) {
-                    this.adjustedAmountData[i] = this.storeAdjustedAmountData[i+12-m];
-                    this.adjustedXStrings[i] = this.storeAdjustedXStrings[i+12-m];
-                    this.adjustedValueData[i] = this.storeAdjustedValueData[i+12-m];
+                    this.adjustedAmountData[i] = this.storeAdjustedAmountData[i + 12 - m];
+                    this.adjustedXStrings[i] = this.storeAdjustedXStrings[i + 12 - m];
+                    this.adjustedValueData[i] = this.storeAdjustedValueData[i + 12 - m];
                 }
                 this.initChart();
             },

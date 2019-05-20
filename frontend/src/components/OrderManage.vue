@@ -35,12 +35,17 @@
                         }
                     },
                     {
+                        title: '用户名',
+                        key: 'userid'
+                    },
+                    {
                         title: '所购书名',
-                        key: 'titleToShow'
+                        key: 'titleToShow',
                     },
                     {
                         title: '日期',
-                        key: 'time'
+                        key: 'time',
+                        width: 99
                     },
                     {
                         title: '总价',
@@ -51,16 +56,17 @@
                     {
                         title: '状态',
                         key: 'state',
-                        width: 70
+                        width: 60
                     },
-                    {
-                        title: '订单号',
-                        key: 'orderid',
-                    },
+                    // {
+                    //     title: '订单号',
+                    //     key: 'orderid',
+                    //     width: 100
+                    // },
                     {
                         title: '操作',
                         key: 'action',
-                        width: 150,
+                        width: 140,
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [

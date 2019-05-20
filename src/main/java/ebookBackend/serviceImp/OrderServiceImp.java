@@ -123,6 +123,23 @@ public class OrderServiceImp implements OrderService {
         return orderMapper.selectByExample(orderExample);
     }
 
+    public List<Order> getByDate(String date1, String date2) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date d2 = null;
+        Date d1 = null;
+        try {
+            d1 = sdf.parse(date1);
+            d2 = sdf.parse(date2);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        OrderExample orderExample = new OrderExample();
+        OrderExample.Criteria criteria = orderExample.createCriteria();
+        criteria.andDateBetween(new BigDecimal(d1.getTime()), new BigDecimal(d2.getTime()));
+        return orderMapper.selectByExample(orderExample);
+    }
+
     public List<Items> getItems(String orderId) {
         ItemsExample itemsExample = new ItemsExample();
         ItemsExample.Criteria criteria = itemsExample.createCriteria();

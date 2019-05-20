@@ -100,7 +100,7 @@
                 </Menu>
             </Col>
             <Col span="19">
-                <RouterView v-bind:username="userID" v-bind:orderState="orderState" v-bind:userID="userID"></RouterView>
+                <RouterView v-bind:username="userID" v-bind:orderState="orderState" v-bind:userID="userID" v-bind:adminMode="adminMode"></RouterView>
             </Col>
         </Row>
         <p v-if="!login">请登录！</p>

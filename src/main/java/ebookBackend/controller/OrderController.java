@@ -49,6 +49,12 @@ public class OrderController {
         return orderService.getByUserAndDate(Uid, date1, date2);
     }
 
+    @ResponseBody
+    @RequestMapping("/getByDate")
+    public List<Order> listByMonthD(@RequestParam String date1, @RequestParam String date2) {
+        return orderService.getByDate(date1, date2);
+    }
+
     @RequestMapping(value = "/insert", method = RequestMethod.POST)
     public String insertOrder(@RequestBody OrderWithItems order) {
         try {

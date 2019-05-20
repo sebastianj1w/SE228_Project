@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="font-size: 13px;margin: 40px">
         <label>用户名 </label><label>{{userInfo.id}}</label><br>
         <label>用户身份 </label><label>{{(userInfo.iden==='user')?'用户':'管理员'}}</label><br>
         <label>邮箱 </label><label>{{userInfo.mail}}</label><br>
