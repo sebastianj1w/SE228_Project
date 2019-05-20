@@ -40,11 +40,11 @@
                         title: '封面',
                         render: (h, params) => {
                             let url = '/books/' + params.row.id;
-                            let src = require("../assets/" + params.row.id + "_ii_cover.jpg");
+                            let src = params.row.id + "_ii_cover.jpg";
                             // console.log(src);
                             return h('img', {
                                     attrs: {
-                                        src: src,
+                                        src: 'http://localhost:8088/image/'+src,
                                         height: 100,
                                         width: 70,
                                         style: "margin-top: 3px;"

@@ -3,6 +3,11 @@
         <FormItem label="标题" v-if="!showDetail">
             <Input v-model="form.title"></Input>
         </FormItem>
+        <FormItem label="封面" v-if="!showDetail">
+            <Upload action="http://localhost:8088/image/upload" :name="form.filename">
+                <Button icon="ios-cloud-upload-outline">Upload files</Button>
+            </Upload>
+        </FormItem>
         <FormItem label="价格" v-if="!showDetail">
             <Input v-model="form.price"></Input>
         </FormItem>
@@ -55,7 +60,8 @@
                     words: null,
                     publishdate: '',
                     abstraction: '',
-                    catalogue: ''
+                    catalogue: '',
+                    filename: ''
                 },
                 showDetail: false,
             }
@@ -90,6 +96,7 @@
             },
             submitInsert() {
                 console.log("submit_insert");
+                console.log(this.form.filename);
                 if (this.form.title === "" || this.form.title === null){
                     alert("标题不能为空");
                     return;

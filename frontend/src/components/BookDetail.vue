@@ -96,6 +96,10 @@
             });
 
             this.cover = 'http://192.168.198.1:8088/image/'+this.ID+'_ii_cover.jpg';
+            axios.get(this.cover)
+                .then((response) => {
+                    console.log(response);
+                })
         }
     }
 </script>

@@ -1,5 +1,8 @@
 package ebookBackend.controller;
 
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,13 +11,17 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.imageio.ImageIO;
 
 
 @RestController
 @CrossOrigin
-@RequestMapping(method = RequestMethod.GET, value = "/image")
+@RequestMapping(value = "/image")
 public class ImageController {
 
 
@@ -41,12 +48,14 @@ public class ImageController {
 //        return "uploadForm";
 //    }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/{filename:.+}")
+    @RequestMapping(method = RequestMethod.GET, value = "/{filename:.+}", produces = MediaType.IMAGE_JPEG_VALUE)
     @ResponseBody
     public Object getFile(@PathVariable String filename) {
         try {
+//            return ImageIO.read(new FileInputStream(new File("./files/"+filename)));
             return resourceLoader.getResource("file:" + Paths.get(ROOT, filename).toString());
         } catch (Exception e) {
+//            return null;
             return resourceLoader.getResource("file:" + Paths.get(ROOT, "notfound.png").toString());
         }
     }
