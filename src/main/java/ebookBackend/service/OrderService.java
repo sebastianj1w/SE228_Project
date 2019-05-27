@@ -15,4 +15,6 @@ public interface OrderService  {
     List<Order> getByDate(String date1, String date2);
     List<Items> getItems(String orderId);
     void deleteOrder(String orderId);
+    void unShowOrder(String orderId);
+    void payOrder(String orderId);
 }

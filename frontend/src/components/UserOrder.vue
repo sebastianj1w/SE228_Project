@@ -78,9 +78,16 @@
                                         on: {
                                             click: () => {
                                                 this.$Message.success('请求已发送!');
+                                                axios.get('http://localhost:8088/order/pay_success', {
+                                                    params: {
+                                                        Oid: params.row.orderid
+                                                    }
+                                                }).then((response) => {
+                                                    that.getList();
+                                                })
                                             }
                                         }
-                                    }, '修改'),
+                                    }, '付款'),
                                     h('Button', {
                                         props: {
                                             type: 'error',
@@ -112,7 +119,7 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.$Message.success('请求已发送!');
+                                                this.$Message.info('评价功能暂未实现');
                                             }
                                         }
                                     }, '评价'),
@@ -123,7 +130,16 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.$Message.success('请求已发送!');
+                                                // this.$Message.success('请求已发送!');
+                                                axios.get('http://localhost:8088/order/un_show', {
+                                                    params: {
+                                                        Oid: params.row.orderid
+                                                    }
+                                                })
+                                                    .then((response) => {
+                                                        // console.log(params.row.orderid);
+                                                        that.getList();
+                                                    })
                                             }
                                         }
                                     }, '删除')
@@ -152,7 +168,16 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.$Message.success('请求已发送!');
+                                                // this.$Message.success('请求已发送!');
+                                                axios.get('http://localhost:8088/order/un_show', {
+                                                    params: {
+                                                        Oid: params.row.orderid
+                                                    }
+                                                })
+                                                    .then((response) => {
+                                                        // console.log(params.row.orderid);
+                                                        that.getList();
+                                                    })
                                             }
                                         }
                                     }, '删除')

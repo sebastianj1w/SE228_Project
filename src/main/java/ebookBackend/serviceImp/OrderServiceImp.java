@@ -74,6 +74,7 @@ public class OrderServiceImp implements OrderService {
         order.setTotal(total);
         order.setState(0);
         order.setDate(new BigDecimal(new Date().getTime()));
+        order.setShow(1);
 
         orderMapper.insert(order);
 
@@ -102,7 +103,7 @@ public class OrderServiceImp implements OrderService {
     public List<Order> getByUserId(String userId) {
         OrderExample orderExample = new OrderExample();
         OrderExample.Criteria criteria = orderExample.createCriteria();
-        criteria.andUseridEqualTo(userId);
+        criteria.andUseridEqualTo(userId).andShowEqualTo(1);
         return orderMapper.selectByExample(orderExample);
     }
 
@@ -119,7 +120,7 @@ public class OrderServiceImp implements OrderService {
         }
         OrderExample orderExample = new OrderExample();
         OrderExample.Criteria criteria = orderExample.createCriteria();
-        criteria.andUseridEqualTo(userId).andDateBetween(new BigDecimal(d1.getTime()), new BigDecimal(d2.getTime()));
+        criteria.andUseridEqualTo(userId).andDateBetween(new BigDecimal(d1.getTime()), new BigDecimal(d2.getTime())).andShowEqualTo(1);
         return orderMapper.selectByExample(orderExample);
     }
 
@@ -158,5 +159,23 @@ public class OrderServiceImp implements OrderService {
 
         itemsMapper.deleteByExample(itemsExample);
         orderMapper.deleteByExample(orderExample);
+    }
+
+    public void unShowOrder(String orderId) {
+        OrderExample orderExample = new OrderExample();
+        OrderExample.Criteria criteria = orderExample.createCriteria();
+        criteria.andOrderidEqualTo(orderId);
+        Order order = new Order();
+        order.setShow(0);
+        orderMapper.updateByExampleSelective(order, orderExample);
+    }
+
+    public void payOrder(String orderId) {
+        OrderExample orderExample = new OrderExample();
+        OrderExample.Criteria criteria = orderExample.createCriteria();
+        criteria.andOrderidEqualTo(orderId);
+        Order order = new Order();
+        order.setState(1);
+        orderMapper.updateByExampleSelective(order, orderExample);
     }
 }

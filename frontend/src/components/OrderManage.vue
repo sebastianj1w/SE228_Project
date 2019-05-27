@@ -3,6 +3,7 @@
         <Input size="large" v-model="searchConName1" placeholder="输入来开始检索...">
             <Button slot="append" icon="ios-search" @click.prevent="handleSearch"></Button>
         </Input>
+        <DatePicker size="large" type="daterange" split-panels placeholder="Select date" style="width: 100%;margin-top: 2px;" ></DatePicker>
         <Table ref="table"  :columns="columns1" :data="orderListShow"></Table>
     </div>
 </template>

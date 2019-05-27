@@ -17,6 +17,7 @@ import UserOrder from "./components/UserOrder.vue";
 import MakeOrder from "./components/MakeOrder.vue";
 import UserInfo from "./components/UserInfo";
 import temp from "./components/temp";
+import ConfirmOrder from "./components/ConfirmOrder"
 
 // 要告诉 vue 使用 vueRouter
 Vue.use(VueRouter);
@@ -107,6 +108,10 @@ const routes = [
     {
         path: '/',
         redirect: '/home'
+    },
+    {
+        path: '/confirm',
+        component: ConfirmOrder
     }
 ];
 

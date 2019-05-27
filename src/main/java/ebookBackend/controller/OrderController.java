@@ -61,6 +61,7 @@ public class OrderController {
             orderService.makeOrder(order);
             return "success";
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return "no stock!";
         }
     }
@@ -70,6 +71,22 @@ public class OrderController {
         Order order = orderService.getByOrderId(Oid);
         if (order == null) return "no such order";
         orderService.deleteOrder(Oid);
+        return "success";
+    }
+
+    @RequestMapping(value = "/un_show", method = RequestMethod.GET)
+    public String unShowOrder(@RequestParam String Oid) {
+        Order order = orderService.getByOrderId(Oid);
+        if (order == null) return "no such order";
+        orderService.unShowOrder(Oid);
+        return "success";
+    }
+
+    @RequestMapping(value = "/pay_success", method = RequestMethod.GET)
+    public String orderPaid(@RequestParam String Oid) {
+        Order order = orderService.getByOrderId(Oid);
+        if (order == null) return "no such order";
+        orderService.payOrder(Oid);
         return "success";
     }
 
