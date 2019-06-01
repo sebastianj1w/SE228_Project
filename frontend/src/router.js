@@ -112,7 +112,11 @@ const routes = [
     {
         path: '/confirm',
         component: ConfirmOrder
-    }
+    },
+    {
+        path: "/confirmB/:ID",
+        component: ConfirmOrder
+    },
 ];
 
 let router = new VueRouter({

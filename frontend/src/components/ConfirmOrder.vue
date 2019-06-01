@@ -19,7 +19,8 @@
         <Button type="primary" style="float: right; margin-right: 40px; margin-top: 20px" v-on:click="makeOrder()">
             确定
         </Button>
-        <label style="float: right; margin-right: 30px;margin-top: 15px; color: red; font-size: 23px">{{ total }}</label>
+        <label style="float: right; margin-right: 30px;margin-top: 15px; color: red; font-size: 23px">{{ total
+            }}</label>
         <label style="float: right;margin-top: 20px; font-size: 15px">总计：</label>
     </div>
 </template>
@@ -37,19 +38,53 @@
                 bookListShow: [],
                 // cart: [],
                 total: 0,
-                logUser: ''
-
+                logUser: '',
+                ID: "initial",
+                immediate: false
             }
         },
         mounted: function () {
+            // console.log(this.$route.params);
+            // console.log(this.$route);
+            // console.log(this.$route.params.ID);
+            if (this.$route.params.ID !== undefined) {
+                this.ID = this.$route.params.ID;
+                this.immediate = true;
+            }
             let that = this;
             that.total = 0;
             that.logUser = sessionStorage.getItem("logUser");
-            this.updateCart();
+            console.log("before" + this.ID);
+            if (this.ID === "initial")
+                this.updateCart();
+            else
+                this.getBook();
             this.total = this.total.toFixed(2);
         },
         methods: {
+            getBook() {
+                console.log("getbook" + this.ID);
+                let that = this;
+                axios.get('http://localhost:8088/book/title?ID=' + that.ID)
+                    .then((response) => {
+                        let temp = {
+                            title: response.data,
+                            price: "",
+                            amount: 0,
+                            total: 0,
+                        };
+                        axios.get('http://localhost:8088/book/getprice?id=' + that.ID)
+                            .then((response) => {
+                                temp.price = response.data;
+                                temp.amount = 1;
+                                temp.total = response.data;
+                                that.bookListShow.push(temp);
+                            })
+                    });
+            },
             updateCart() {
+                console.log("updatecart" + this.ID);
+                if (this.ID !== "initial") return;
                 let that = this;
                 let bookMap = new Map();
                 that.bookListShow = [];
@@ -82,22 +117,31 @@
                 // console.log("1232");
                 let that = this;
                 let orderStr = "";
-                for (let i = 0; i < this.bookListShow.length; i++) {
-                    orderStr += (this.bookListShow[i].id + ':' + this.bookListShow[i].amount + ";");
+                if (that.immediate) {
+                    orderStr += (this.ID + ':' + this.bookListShow[0].amount + ";")
+                } else {
+                    for (let i = 0; i < this.bookListShow.length; i++) {
+                        orderStr += (this.bookListShow[i].id + ':' + this.bookListShow[i].amount + ";");
+                    }
                 }
                 if (orderStr === "") return;
+                console.log({
+                    'userid': this.logUser,
+                    'itemStr': orderStr
+                });
                 axios.post('http://localhost:8088/order/insert', {
                     'userid': this.logUser,
                     'itemStr': orderStr
                 }).then((response) => {
                     if (response.data === "success") {
                         console.log(123);
-                        axios.get('http://localhost:8088/cart/clean?Uid=' + that.logUser)
-                            .then((response) => {
-                                // console.log(response);
-                                that.updateCart();
-                                that.cartStr = "";
-                            });
+                        if (that.immediate)
+                            axios.get('http://localhost:8088/cart/clean?Uid=' + that.logUser)
+                                .then((response) => {
+                                    // console.log(response);
+                                    that.updateCart();
+                                    that.cartStr = "";
+                                });
                         this.$router.push('/');
                     } else {
                         console.log(1234);

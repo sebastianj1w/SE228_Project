@@ -26,7 +26,7 @@
                         <br>
                         <div style="margin-top: 20px;">
                             <Button class="button1" size="large" type="primary" @click="addCart">加入购物车</Button>
-                            <Button class="button1" size="large" type="error">立即购买</Button>
+                            <Button class="button1" size="large" type="error" @click="buy">立即购买</Button>
                         </div>
                     </Col>
                 </Row>
@@ -72,6 +72,9 @@
             }
         },
         methods: {
+            buy() {
+                this.$router.push("/confirmB/" + this.ID);
+            },
             addCart() {
                 if (!JSON.parse(sessionStorage.getItem("login"))) {
                     alert("请登录！");
