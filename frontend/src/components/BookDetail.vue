@@ -25,7 +25,7 @@
                         <label class="label1">字数： </label><label class="label2"> {{item.words}} 万</label>
                         <br>
                         <div style="margin-top: 20px;">
-                            <Button class="button1" size="large" type="primary" @click="addCart">加入购物车</Button>
+                            <Button class="button1" size="large"  type="primary" @click="addCart">加入购物车</Button>
                             <Button class="button1" size="large" type="error" @click="buy">立即购买</Button>
                         </div>
                     </Col>
