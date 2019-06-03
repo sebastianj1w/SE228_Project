@@ -7,6 +7,9 @@
     <div>
         <label style="margin: 5px; font-size: 15px;color: #2baee9;">订单详情</label>
         <Row style="margin: 5px;font-size: 13px">
+            <label>订单号: {{ orderid }}</label>
+        </Row>
+        <Row style="margin: 5px;font-size: 13px">
             <Col span="19">书名</Col>
             <Col span="3">单价</Col>
             <Col span="1">数量</Col>
@@ -27,7 +30,7 @@
 
     export default {
         props: {
-            orderid: String
+            orderid: String,
         },
         data() {
             return {

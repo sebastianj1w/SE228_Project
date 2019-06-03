@@ -3,6 +3,7 @@
         <Input size="large" v-model="searchConName1" placeholder="输入来开始检索...">
             <Button slot="append" icon="ios-search" @click.prevent="handleSearch"></Button>
         </Input>
+        <DatePicker size="large" type="daterange" split-panels placeholder="Select date" style="width: 100%;margin-top: 2px;" ></DatePicker>
         <Table ref="table"  :columns="columns1" :data="orderListShow"></Table>
     </div>
 </template>
@@ -35,12 +36,17 @@
                         }
                     },
                     {
+                        title: '用户名',
+                        key: 'userid'
+                    },
+                    {
                         title: '所购书名',
-                        key: 'titleToShow'
+                        key: 'titleToShow',
                     },
                     {
                         title: '日期',
-                        key: 'time'
+                        key: 'time',
+                        width: 99
                     },
                     {
                         title: '总价',
@@ -51,16 +57,17 @@
                     {
                         title: '状态',
                         key: 'state',
-                        width: 70
+                        width: 60
                     },
-                    {
-                        title: '订单号',
-                        key: 'orderid',
-                    },
+                    // {
+                    //     title: '订单号',
+                    //     key: 'orderid',
+                    //     width: 100
+                    // },
                     {
                         title: '操作',
                         key: 'action',
-                        width: 150,
+                        width: 140,
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [

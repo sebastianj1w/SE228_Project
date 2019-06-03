@@ -584,6 +584,66 @@ public class OrderExample {
             addCriterion("date not between", value1, value2, "date");
             return (Criteria) this;
         }
+
+        public Criteria andShowIsNull() {
+            addCriterion("show is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowIsNotNull() {
+            addCriterion("show is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowEqualTo(Integer value) {
+            addCriterion("show =", value, "show");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowNotEqualTo(Integer value) {
+            addCriterion("show <>", value, "show");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowGreaterThan(Integer value) {
+            addCriterion("show >", value, "show");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowGreaterThanOrEqualTo(Integer value) {
+            addCriterion("show >=", value, "show");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowLessThan(Integer value) {
+            addCriterion("show <", value, "show");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowLessThanOrEqualTo(Integer value) {
+            addCriterion("show <=", value, "show");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowIn(List<Integer> values) {
+            addCriterion("show in", values, "show");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowNotIn(List<Integer> values) {
+            addCriterion("show not in", values, "show");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowBetween(Integer value1, Integer value2) {
+            addCriterion("show between", value1, value2, "show");
+            return (Criteria) this;
+        }
+
+        public Criteria andShowNotBetween(Integer value1, Integer value2) {
+            addCriterion("show not between", value1, value2, "show");
+            return (Criteria) this;
+        }
     }
 
     /**

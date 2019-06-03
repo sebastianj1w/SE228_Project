@@ -12,6 +12,9 @@ public interface OrderService  {
     Order makeOrder(OrderWithItems orderWithItems) throws Exception ;
     List<Order> getByUserId(String userId);
     List<Order> getByUserAndDate(String userId, String date1, String date2);
+    List<Order> getByDate(String date1, String date2);
     List<Items> getItems(String orderId);
     void deleteOrder(String orderId);
+    void unShowOrder(String orderId);
+    void payOrder(String orderId);
 }

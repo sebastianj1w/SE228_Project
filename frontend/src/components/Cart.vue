@@ -2,9 +2,11 @@
     <div>
         <Table style="margin: 1px" width="100%" ref="table" :columns="columns1"
                :data="bookListShow"></Table>
-        <Button type="primary" style="float: right; margin-right: 40px; margin-top: 20px" v-on:click="makeOrder()">
-            立即下单
-        </Button>
+        <router-link to="/confirm">
+            <Button v-if="bookListShow.length > 0" type="primary" style="float: right; margin-right: 40px; margin-top: 20px">
+                立即下单
+            </Button>
+        </router-link>
         <label style="float: right; margin-right: 30px;margin-top: 15px; color: red; font-size: 23px">{{ total
             }}</label>
         <label style="float: right;margin-top: 20px; font-size: 15px">总计：</label>
@@ -81,7 +83,28 @@
                                         style: params.row.editting ? display : display_n
                                     }
                                 }, [
-                                    h('Button', {attrs: {type: "text"}}, '+'), h('Button', {attrs: {type: "text"}}, '-')
+                                    h('Button', {
+                                        attrs: {
+                                            type: "text"
+                                        },
+                                        on: {
+                                            'click': function () {
+                                                params.row.amount++;
+                                                a = params.row.amount;
+                                            }
+                                        }
+                                    }, '+'),
+                                    h('Button', {
+                                        attrs: {
+                                            type: "text"
+                                        },
+                                        on: {
+                                            'click': function () {
+                                                params.row.amount--;
+                                                a = params.row.amount;
+                                            }
+                                        }
+                                    }, '-')
                                 ]),
                                 h('Button', {
                                     attrs: {
@@ -91,7 +114,7 @@
                                     on: {
                                         'click': function () {
                                             if (params.row.editting) {
-                                                if (params.row.amount !== a)
+                                                if (params.row.amount !== params.row.old_amount || params.row.amount !== a)
                                                     axios.get('http://localhost:8088/cart/set', {
                                                         params: {
                                                             Uid: that.logUser,
@@ -183,6 +206,7 @@
                             axios.get('http://localhost:8088/book/information?ID=' + value)
                                 .then((response) => {
                                     response.data.amount = key;
+                                    response.data.old_amount = key;
                                     response.data.total = response.data.price * key;
                                     response.data.editting = false;
                                     that.bookListShow.push(response.data);
@@ -193,34 +217,6 @@
             stringifyCart(params) {
                 console.log(params);
             },
-            makeOrder() {
-                // console.log("1232");
-                let that = this;
-                let orderStr = "";
-                for (let i = 0; i < this.bookListShow.length; i++) {
-                    orderStr += (this.bookListShow[i].id + ':' + this.bookListShow[i].amount + ";");
-                }
-                axios.post('http://localhost:8088/order/insert', {
-                    'userid': this.logUser,
-                    'itemStr': orderStr
-                }).then((response) => {
-                    if (response.data === "success") {
-                        console.log(123);
-                        axios.get('http://localhost:8088/cart/clean?Uid=' + that.logUser)
-                            .then((response) => {
-                                // console.log(response);
-                                that.updateCart();
-                                that.cartStr = "";
-                            });
-                    } else {
-                        console.log(1234);
-                        // console.log(response);
-                        alert(response.data);
-                    }
-
-
-                })
-            }
         },
         watch: {
             bookListShow: {

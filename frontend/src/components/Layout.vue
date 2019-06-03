@@ -84,17 +84,6 @@
                 loginDrawer: false,
                 cart: [],
                 logUser: "",
-                // orderList: [
-                //     {
-                //         order_no: "A3772",
-                //         userID: "Auser",
-                //         title: "尼采哲学经典(套装共5册)",
-                //         ISBN: 9787548420460,
-                //         price: 9.99,
-                //         amount: 2,
-                //         total: 19.98,
-                //     }
-                // ]
             }
         },
         methods: {

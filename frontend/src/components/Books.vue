@@ -114,6 +114,7 @@
                                     },
                                     on: {
                                         click: () => {
+                                            this.$router.push("/confirmB/" + params.row.id);
                                             this.$Message.success('请求已发送!');
                                         }
                                     }
