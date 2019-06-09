@@ -1,39 +1,33 @@
 <template>
     <div style="min-height: 500px;">
-        <Input size="large" v-model="searchConName1" placeholder="输入书籍标题来开始检索...">
+        <Input size="large" v-model="searchConName1" placeholder="输入以开始搜索...">
+            <Select v-model="key" slot="prepend" style="width: 80px">
+                <Option value="title">书名</Option>
+                <Option value="author">作者</Option>
+                <Option value="publisher">出版社</Option>
+                <!--<Option value="ISBN">ISBN</Option>-->
+                <Option value="poly">聚合</Option>
+            </Select>
             <Button slot="append" icon="ios-search" @click.prevent="handleSearch"></Button>
         </Input>
         <Table ref="table" :columns="columns1" :data="bookListShow"></Table>
-        <Button type="primary" size="large" v-on:click="handleInsert" style="margin: 20px; float: right;" >新增</Button>
-        <Modal
-                v-model="updateModal"
-                :title="updateTitle"
-                @on-ok="ok"
-                @on-cancel="cancel">
-                <BookUpdate :do_submit="do_submit" v-on:updated="updated()"></BookUpdate>
-        </Modal>
     </div>
 </template>
 
 <script>
+    // import Abstract from './BookDetail.vue'
     import axios from 'axios/index'
-    import BookUpdate from './BookUpdate.vue'
+
     export default {
         name: "Books",
         components: {
-            BookUpdate,
+            // Abstract
         },
-
         data() {
             return {
-                do_submit: "",
-                idToUpdate: "",
+                key: "title",
                 searchConName1: '',
-                updateModal: false,
-                insertModal: false,
-                updateTitle: "修改图书信息-",
-                insertTitle: "新增图书信息",
-                // tableHeight: 450,
+                tableHeight: 450,
                 columns1: [
                     {
                         title: '封面',
@@ -70,10 +64,10 @@
                         title: '作者',
                         key: 'author'
                     },
-                    // {
-                    //     title: '出版社',
-                    //     key: 'publisher'
-                    // },
+                    {
+                        title: '出版社',
+                        key: 'publisher'
+                    },
                     {
                         title: 'ISBN',
                         key: 'isbn'
@@ -81,37 +75,37 @@
                     {
                         title: '价格',
                         key: 'price',
-                        width: 80,
-                        sortable: true
+                        sortable: true,
+                        width: 100,
                     },
                     {
                         title: '库存',
                         key: 'stock',
-                        width: 80,
-                        sortable: true
+                        sortable: true,
+                        width: 90,
                     },
                     {
                         title: '操作',
                         key: 'action',
-                        width: 150,
+                        width: 230,
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [
                                 h('Button', {
                                     props: {
                                         type: 'primary',
-                                        size: 'small',
+                                        size: 'small'
                                     },
                                     style: {
                                         marginRight: '5px'
                                     },
                                     on: {
                                         click: () => {
-                                            // this.$Message.success('请求已发送!');
-                                            this.handleModify(params.row.title, params.row.id);
+                                            this.$Message.success('请求已发送!');
+                                            this.addToCart(params.row.id);
                                         }
                                     }
-                                }, '修改'),
+                                }, '加入购物车'),
                                 h('Button', {
                                     props: {
                                         type: 'error',
@@ -119,11 +113,11 @@
                                     },
                                     on: {
                                         click: () => {
-                                            // this.$Message.success('请求已发送!');
-                                            this.handleDelete(params.row.id);
+                                            this.$router.push("/confirmB/" + params.row.id);
+                                            this.$Message.success('请求已发送!');
                                         }
                                     }
-                                }, '删除')
+                                }, '立即购买')
                             ]);
                         }
                     }
@@ -133,37 +127,6 @@
             }
         },
         methods: {
-            updated() {
-                this.do_submit = "";
-                axios.get('http://localhost:8088/book/all')
-                    .then((response) => {
-                        this.bookList = response.data;
-                        this.bookListShow = this.bookList;
-                    }).catch((error) => {
-                    console.log(error);
-                });
-            },
-            handleInsert() {
-                this.updateModal = true;
-                this.insertModal = true;
-                this.updateTitle = "新增图书信息";
-            },
-            handleDelete(id) {
-                axios.get('http://localhost:8088/book/delete?id='+id)
-                    .then((response) => {
-                        this.updated();
-                        // console.log(response);
-                    }).catch((error) => {
-                        console.log(error);
-                });
-            },
-            handleModify(title, id) {
-                this.updateTitle = "修改图书信息-"+title;
-                this.updateModal = true;
-                this.insertModal = false;
-                this.idToUpdate = id;
-
-            },
             search(data, argumentObj) {
                 let res = data;
                 let dataClone = data;
@@ -179,30 +142,62 @@
             },
             handleSearch() {
                 this.bookListShow = this.bookList;
-                this.bookListShow = this.search(this.bookList, {title: this.searchConName1});
-            },
-            ok() {
-                if (!this.insertModal) {
-                    this.do_submit = this.idToUpdate;
-                } else {
-                    this.do_submit = "insert";
+                if (this.key === "title")
+                    this.bookListShow = this.search(this.bookList, {title: this.searchConName1});
+                else if (this.key === "author")
+                    this.bookListShow = this.search(this.bookList, {author: this.searchConName1});
+                else if (this.key === "publisher")
+                    this.bookListShow = this.search(this.bookList, {publisher: this.searchConName1});
+                else if (this.key === "poly") {
+                    this.bookListShow = this.search(this.bookList, {title: this.searchConName1});
+
+                    let temp = this.search(this.bookList, {author: this.searchConName1});
+                    if (temp != null)
+                        this.bookListShow = this.bookListShow.concat(temp);
+
+                    temp = this.search(this.bookList, {publisher: this.searchConName1});
+                    if (temp != null)
+                        this.bookListShow = this.bookListShow.concat(temp);
+
+                    temp = []; //一个新的临时数组
+                    for (let i = 0; i < this.bookListShow.length; i++) {
+                        if (temp.indexOf(this.bookListShow[i]) === -1) {
+                            temp.push(this.bookListShow[i]);
+                        }
+                    }
+
+                    this.bookListShow = temp;
                 }
             },
-            cancel() {
-                this.do_submit = "cancel";
+            addToCart(ID) {
+                if (!JSON.parse(sessionStorage.getItem("login"))) {
+                    alert("请登录！");
+                    return;
+                }
+                let uid = sessionStorage.getItem("logUser");
+                axios.get('http://localhost:8088/cart/add', {
+                    params: {
+                        'Uid': uid,
+                        'Bid': ID
+                    }
+                })
+                    .then((response) => {
+                        console.log("send add cart request");
+                    });
             }
         },
         mounted() {
             axios.get('http://localhost:8088/book/all')
                 .then((response) => {
-                    console.log(response);
                     this.bookList = response.data;
                     this.bookListShow = this.bookList;
+
                 }).catch((error) => {
                 console.log(error);
             });
-            // this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 100;
+            this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 100;
             this.bookListShow = this.bookList;
+            // console.log(this.bookListShow);
         },
     }
 </script>

@@ -17,4 +17,5 @@ public interface OrderService  {
     void deleteOrder(String orderId);
     void unShowOrder(String orderId);
     void payOrder(String orderId);
+    void commentedOrder(String orderId);
 }

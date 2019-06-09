@@ -994,6 +994,76 @@ public class BooksExample {
             addCriterion("catalogue not between", value1, value2, "catalogue");
             return (Criteria) this;
         }
+
+        public Criteria andPicidIsNull() {
+            addCriterion("picID is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicidIsNotNull() {
+            addCriterion("picID is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicidEqualTo(String value) {
+            addCriterion("picID =", value, "picid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicidNotEqualTo(String value) {
+            addCriterion("picID <>", value, "picid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicidGreaterThan(String value) {
+            addCriterion("picID >", value, "picid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicidGreaterThanOrEqualTo(String value) {
+            addCriterion("picID >=", value, "picid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicidLessThan(String value) {
+            addCriterion("picID <", value, "picid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicidLessThanOrEqualTo(String value) {
+            addCriterion("picID <=", value, "picid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicidLike(String value) {
+            addCriterion("picID like", value, "picid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicidNotLike(String value) {
+            addCriterion("picID not like", value, "picid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicidIn(List<String> values) {
+            addCriterion("picID in", values, "picid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicidNotIn(List<String> values) {
+            addCriterion("picID not in", values, "picid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicidBetween(String value1, String value2) {
+            addCriterion("picID between", value1, value2, "picid");
+            return (Criteria) this;
+        }
+
+        public Criteria andPicidNotBetween(String value1, String value2) {
+            addCriterion("picID not between", value1, value2, "picid");
+            return (Criteria) this;
+        }
     }
 
     /**

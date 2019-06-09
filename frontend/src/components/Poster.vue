@@ -12,22 +12,22 @@
         <Carousel autoplay v-model="value2" loop dots="outside" class="carouse_out">
         <CarouselItem>
             <div class="demo-carousel">
-                <img src="http://192.168.198.1:8088/image/poster-ex.jpg" class="carouse_img">
+                <img src="http://192.168.198.1:8088/image/5cfcb576283fe73fe8904585" class="carouse_img">
             </div>
         </CarouselItem>
         <CarouselItem>
             <div class="demo-carousel">
-                <img src="http://192.168.198.1:8088/image/poster-ex1.jpg" class="carouse_img">
+                <img src="http://192.168.198.1:8088/image/5cfcb58b283fe73fe8904586" class="carouse_img">
             </div>
         </CarouselItem>
         <CarouselItem>
             <div class="demo-carousel">
-                <img src="http://192.168.198.1:8088/image/poster-ex2.jpg" class="carouse_img">
+                <img src="http://192.168.198.1:8088/image/5cfcb596283fe73fe8904587" class="carouse_img">
             </div>
         </CarouselItem>
         <CarouselItem>
             <div class="demo-carousel">
-                <img src="http://192.168.198.1:8088/image/poster-ex3.jpg" class="carouse_img">
+                <img src="http://192.168.198.1:8088/image/5cfcb5a3283fe73fe8904588" class="carouse_img">
             </div>
         </CarouselItem>
     </Carousel></Card>

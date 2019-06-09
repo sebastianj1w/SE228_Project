@@ -4,6 +4,18 @@
             <Button slot="append" icon="ios-search" @click.prevent="handleSearch"></Button>
         </Input>
         <Table ref="table" :columns="columns1" :data="orderListShow"></Table>
+        <Modal
+                v-model="commentModal"
+                :title="'评价订单'+title"
+                @on-ok="ok"
+                @on-cancel="cancel">
+            <ul>
+                <li v-for="item in itemList" style="list-style-type: none">
+                    <label style="font-size:15px;line-height: 30px">{{item.title}}</label>
+                    <Input v-model="item.comment" type="textarea" :rows="6"></Input>
+                </li>
+            </ul>
+        </Modal>
     </div>
 </template>
 
@@ -119,7 +131,7 @@
                                         },
                                         on: {
                                             click: () => {
-                                                this.$Message.info('评价功能暂未实现');
+                                                that.doComment(params.row.orderid);
                                             }
                                         }
                                     }, '评价'),
@@ -188,7 +200,12 @@
                 orderList: [],
                 orderListShow: [],
                 orderListStore: [],
-                logUser: ""
+                logUser: "",
+                title: "",
+                commentModal: false,
+                itemList: [],
+                getItemsOk: false,
+                currentID: '',
             }
         },
         methods: {
@@ -261,7 +278,49 @@
                 this.orderList = temp;
                 this.orderListShow = this.orderList;
                 // console.log(333321);
-            }
+            },
+            doComment(id) {
+                console.log("doc");
+                this.title = id;
+                this.commentModal = true;
+                let that = this;
+                axios.get('http://localhost:8088/order/getItems?Oid=' + id)
+                    .then((response) => {
+                        that.itemList = response.data;
+                        for (let i = 0; i < that.itemList.length; i++) {
+                            axios.get('http://localhost:8088/book/title?ID=' + that.itemList[i].bookid)
+                                .then((response) => {
+                                    that.itemList[i].title = response.data;
+                                    that.itemList[i].comment = '';
+                                    this.$forceUpdate();
+                                })
+                                .catch((error) => {
+                                    console.log(error);
+                                })
+                        }
+                    }).catch((error) => {
+                    console.log(error);
+                });
+            },
+            ok() {
+                for (let i = 0; i < this.itemList.length; i++) {
+                    console.log(this.itemList[i].comment);
+                    axios.post("http://localhost:8088/comment/setToBook?Bid=" + this.itemList[i].bookid,
+                        {
+                            "userid": this.logUser,
+                            "toid": this.itemList[i].bookid,
+                            "content": this.itemList[i].comment,
+                        }).then((response) => {
+                            console.log(response);
+                    })
+                }
+                axios.get("http://localhost:8088/order/comment_success?Oid=" + this.title)
+                    .then((response) => {
+                        this.getList();
+                    });
+            },
+            cancel() {
+            },
         },
         mounted() {
             this.state = this.$route.params.state;
@@ -288,6 +347,11 @@
                 handler() {
                     console.log(321);
                     this.changeList();
+                }
+            },
+            getItemsOk: {
+                handler() {
+                    console.log("watched");
                 }
             }
         }

@@ -178,4 +178,13 @@ public class OrderServiceImp implements OrderService {
         order.setState(1);
         orderMapper.updateByExampleSelective(order, orderExample);
     }
+
+    public void commentedOrder(String orderId) {
+        OrderExample orderExample = new OrderExample();
+        OrderExample.Criteria criteria = orderExample.createCriteria();
+        criteria.andOrderidEqualTo(orderId);
+        Order order = new Order();
+        order.setState(2);
+        orderMapper.updateByExampleSelective(order, orderExample);
+    }
 }

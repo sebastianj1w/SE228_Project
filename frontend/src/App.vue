@@ -3,7 +3,7 @@
 </template>
 
 <script>
-    import layout from './components/Layout.vue'
+    import layout from './Layout.vue'
     export default {
         name: 'app',
         components: {

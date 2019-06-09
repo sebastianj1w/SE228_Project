@@ -40,6 +40,7 @@ public class BookController {
     @ResponseBody
     public int update(@RequestBody Books book) {
         System.out.println("1");
+        System.out.println(book.getPicid());
         return bookService.update(book);
     }
 

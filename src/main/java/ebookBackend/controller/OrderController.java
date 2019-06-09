@@ -90,6 +90,14 @@ public class OrderController {
         return "success";
     }
 
+    @RequestMapping(value = "/comment_success", method = RequestMethod.GET)
+    public String orderCommented(@RequestParam String Oid) {
+        Order order = orderService.getByOrderId(Oid);
+        if (order == null) return "no such order";
+        orderService.commentedOrder(Oid);
+        return "success";
+    }
+
     @RequestMapping(value = "/getItems", method = RequestMethod.GET)
     public List<Items> insertOrder(@RequestParam String Oid) {
         return orderService.getItems(Oid);

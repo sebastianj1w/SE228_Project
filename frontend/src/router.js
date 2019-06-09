@@ -1,23 +1,23 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 // 引入组件
-import Home from "./components/Home.vue";
-import Books from "./components/Books.vue";
+import Home from "./views/Home.vue";
+import Books from "./views/Books.vue";
 import BookManage from "./components/BookManage.vue";
 import UserManage from "./components/UserManage.vue"
-import BookDetail from "./components/BookDetail.vue";
-import Signup from "./components/SignupPage.vue";
-import Cart from "./components/Cart.vue";
-import UserHome from "./components/UserHome.vue";
+import BookDetail from "./views/BookDetail.vue";
+import Signup from "./views/SignupPage.vue";
+import Cart from "./views/Cart.vue";
+import UserHome from "./views/UserHome.vue";
 import NonePage from "./components/NonePage.vue";
 import UserHello from "./components/UserHello.vue";
 import Statistics from "./components/Statistics.vue";
-import OrderManager from "./components/OrderManage.vue";
+import OrderManager from "./views/OrderManage.vue";
 import UserOrder from "./components/UserOrder.vue";
-import MakeOrder from "./components/MakeOrder.vue";
+import MakeOrder from "./views/MakeOrder.vue";
 import UserInfo from "./components/UserInfo";
 import temp from "./components/temp";
-import ConfirmOrder from "./components/ConfirmOrder"
+import ConfirmOrder from "./views/ConfirmOrder"
 
 // 要告诉 vue 使用 vueRouter
 Vue.use(VueRouter);
@@ -26,6 +26,10 @@ const routes = [
     {
         path: "/home",
         component: Home
+    },
+    {
+        path: "/test",
+        component: temp
     },
     {
         path: "/books",

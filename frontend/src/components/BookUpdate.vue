@@ -4,7 +4,8 @@
             <Input v-model="form.title"></Input>
         </FormItem>
         <FormItem label="封面" v-if="!showDetail">
-            <Upload action="http://localhost:8088/image/upload" :name="form.filename">
+            <img v-if="submitID!==''" :src="'http://localhost:8088/image/'+submitID">
+            <Upload ref="upload1" action="http://localhost:8088/image/uploadImage" method="post" enctype="multipart/form-data" :on-success="uploadSuccess">
                 <Button icon="ios-cloud-upload-outline">Upload files</Button>
             </Upload>
         </FormItem>
@@ -50,6 +51,7 @@
         data () {
             return {
                 // do_submit:0,
+                submitID: '',
                 form: {
                     title: '',
                     price: null,
@@ -68,6 +70,10 @@
         },
         mounted: function(){},
         methods: {
+            uploadSuccess(response, file, fileList) {
+                this.submitID = response;
+                console.log(response);
+            },
             changeShow() {
                 this.showDetail = !this.showDetail;
             },
@@ -76,6 +82,7 @@
                 console.log("submit_update");
                 axios.post('http://localhost:8088/book/update',{
                     "id":this.do_submit,
+                    "picid":this.submitID,
                     "title": (this.form.title!=='')?this.form.title:null,
                     "price": (this.form.price!==null)?this.form.price:null,
                     "author": (this.form.author!=='')?this.form.author:null,
@@ -106,6 +113,7 @@
                     return;
                 }
                 axios.post('http://localhost:8088/book/new',{
+                    "picid":this.submitID,
                     "title": (this.form.title!=='')?this.form.title:"null",
                     "price": (this.form.price!==null)?this.form.price:0,
                     "author": (this.form.author!=='')?this.form.author:"null",
@@ -136,6 +144,8 @@
                 this.form.abstraction = '';
                 this.form.catalogue= '';
                 this.showDetail = false;
+                this.submitID = '';
+                this.$refs.upload1.clearFiles();
             }
         },
         watch: {
